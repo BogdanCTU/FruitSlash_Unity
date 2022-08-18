@@ -15,11 +15,18 @@ public class Food : MonoBehaviour
     private Rigidbody objectRigidbody;
 
     // Horizontal Forces
-    protected static float horizontalForce, horizontalForceMin = 2, horizontalForceMax = 5, verticalForceMin = 10, verticalForceMax = 15;
+    protected static float horizontalForce, horizontalForceMin = 2, horizontalForceMax = 5, verticalForceMin = 6, verticalForceMax = 10;
+
+    // Particle Effect Colour
+    [SerializeField] private Material[] materials;
+    [SerializeField] private string[] foods;
 
     #endregion
 
     #region Methods
+
+    #region Unity Methods
+
     private void Awake()
     {
         objectRigidbody = GetComponent<Rigidbody>();
@@ -31,13 +38,44 @@ public class Food : MonoBehaviour
         DeactivateFood();
     }
 
+    private void OnEnable()
+    {
+        SetPosition();
+        MoveObject();
+    }
+
+    /*
     private void OnMouseDown()
     {
         GetGameMode();
-
-        // Deactivate gameObject
-        this.gameObject.SetActive(false);
+        this.gameObject.SetActive(false);   // Deactivate gameObject
+        SpawnParticleEffect();
     }
+    */
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "SwipeTrail")
+        {
+            GetGameMode();
+            this.gameObject.SetActive(false);   // Deactivate gameObject
+            SpawnParticleEffect();
+        }
+        else if (other.gameObject.tag == "LeftEdge")   // Colliding Left Edge
+        {
+            objectRigidbody.AddForce(Vector3.right * horizontalForce / 2, ForceMode.Impulse);
+        }
+        else if (other.gameObject.tag == "RightEdge")   // Colliding Right Edge
+        {
+            objectRigidbody.AddForce(Vector3.left * horizontalForce / 2, ForceMode.Impulse);
+        }
+        else if (other.gameObject.tag == "TopEdge")
+        {
+            objectRigidbody.AddForce(Vector3.down * verticalForceMax / 2, ForceMode.Impulse);
+        }
+    }
+
+    #endregion Unity Methods
 
     private void GetGameMode()
     {
@@ -59,7 +97,7 @@ public class Food : MonoBehaviour
         }
     }
 
-    #region Movement adn Position
+    #region Movement and Position
 
     public void DeactivateFood()
     {
@@ -89,7 +127,24 @@ public class Food : MonoBehaviour
         objectRigidbody.AddTorque(Random.Range(-25, 25), Random.Range(-25, 25), Random.Range(-25, 25));
     }
 
-    #endregion Movement adn Position
+    #endregion Movement and Position
+
+    private void SpawnParticleEffect()
+    {
+        GameObject gameObject = Particle_Spawner.SharedInstance.GetPooledObject();
+        if (gameObject != null)
+        {
+            for (int i = 0; i < materials.Length; i++)
+            {
+                if (this.gameObject.tag == foods[i])
+                {
+                    gameObject.GetComponent<Renderer>().material = materials[i];
+                }
+            }
+            gameObject.transform.position = this.gameObject.transform.position;
+            gameObject.SetActive(true);
+        }
+    }
 
     #endregion
 }

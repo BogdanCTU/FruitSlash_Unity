@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]   // Allows to make instances of this class editable from within the Inspector.
-public class Spawner_Controller : MonoBehaviour
+public class Food_Spawner : MonoBehaviour
 {
     #region Variables
 
     #region PoolingMethod
     // Shared Instance
-    public static Spawner_Controller SharedInstance;
+    public static Food_Spawner SharedInstance;
 
     // Pooling List
     [SerializeField]
@@ -20,9 +20,9 @@ public class Spawner_Controller : MonoBehaviour
     private List<ObjectPoolItem> itemsToPool;
     #endregion
 
-    //Object to pull tag
-    [SerializeField]
-    protected string objectTag = "Skull";
+    // Object to pull tag and type
+    protected string objectTag;    // objectTag  {cookie, steak, pizza}
+    protected int objectType;      // objectType {  0   ,   1  ,   2  }
 
     // Timers
     [SerializeField]
@@ -32,6 +32,8 @@ public class Spawner_Controller : MonoBehaviour
     #endregion
 
     #region Methods
+
+    #region Unity Methods
 
     protected void Awake()
     {
@@ -43,6 +45,13 @@ public class Spawner_Controller : MonoBehaviour
         SetObjectsToPull();
         StartCoroutine("SpawnObject");
     }
+
+    private void OnEnable()
+    {
+        StartCoroutine("SpawnObject");
+    }
+
+    #endregion Unity Methods
 
     #region Object Pooling Methods
     protected void SetObjectsToPull()
@@ -88,12 +97,15 @@ public class Spawner_Controller : MonoBehaviour
     protected IEnumerator SpawnObject()
     {
         Debug.Log("Coroutine - started!");
-        GameObject skull = GetPooledObject(objectTag);
-        if (skull != null)
+
+        RandomFoodType();   // Randomise food to spawn
+
+        GameObject objectToSpawn = GetPooledObject(objectTag);
+        if (objectToSpawn != null)
         {
-            skull.SetActive(true);
-            skull.GetComponent<Skull>().SetPosition();
-            skull.GetComponent<Skull>().MoveObject();
+            objectToSpawn.SetActive(true);
+            objectToSpawn.GetComponent<Food>().SetPosition();
+            objectToSpawn.GetComponent<Food>().MoveObject();
         }
 
         // Code will be executer before starting timer
@@ -102,6 +114,15 @@ public class Spawner_Controller : MonoBehaviour
 
         nextObjectTimer = Random.Range(nextObjectTimerMin, nextObjectTimerMax);
         StartCoroutine("SpawnObject");
+    }
+
+    private void RandomFoodType()
+    {
+        // Randomise FoodType to spawn
+        objectType = Random.Range(0, 3);   // The max value is excluded
+        if (objectType == 0) objectTag = "Cookie";
+        else if (objectType == 1) objectTag = "Steak";
+        else if (objectType == 2) objectTag = "Pizza";
     }
 
     #region Getters/Setters
@@ -120,8 +141,9 @@ public class Spawner_Controller : MonoBehaviour
 [System.Serializable]
 public class ObjectPoolItem
 {
-    public int amountToPool;   // The starting ammount of objects to pull (it will increase eventually)
-    public GameObject objectToPool;   // GameObject to pull
-    public bool shouldExpand;   // Checking if more objects are needed
+    public int amountToPool;
+    public GameObject objectToPool;
+    public bool shouldExpand;
 }
-   // EOF - End Of File
+
+// EOF - End Of File

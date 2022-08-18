@@ -5,12 +5,14 @@ TagManager:
   serializedVersion: 2
   tags:
   - Bad
-  - LeftWall
-  - RightWall
   - Skull
   - Cookie
   - Steak
   - Pizza
+  - SwipeTrail
+  - TopEdge
+  - RightEdge
+  - LeftEdge
   layers:
   - Default
   - TransparentFX

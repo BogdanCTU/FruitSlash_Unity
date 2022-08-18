@@ -31,6 +31,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0.7071068, z: -0.7071068, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.5000001, y: 1.5000001, z: 1.5000001}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -54,6 +55,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
@@ -99,7 +101,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 8
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!135 &427645683
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -128,3 +130,11 @@ MonoBehaviour:
   name: Cookie
   points: 10
   bonusTyme: 1
+  materials:
+  - {fileID: 2100000, guid: 675292afddd494b49b7f941102faa870, type: 2}
+  - {fileID: 2100000, guid: e3d9f950092af9a45a39c556ec2a77c0, type: 2}
+  - {fileID: 2100000, guid: 18e453f7118b2e04e85b2f5c70222d09, type: 2}
+  foods:
+  - Cookie
+  - Steak
+  - Pizza

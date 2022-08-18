@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Skull : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
     #region Variables
 
@@ -12,9 +12,14 @@ public class Skull : MonoBehaviour
     // Horizontal Forces
     protected static float horizontalForce, horizontalForceMin = 2, horizontalForceMax = 5, verticalForceMin = 10, verticalForceMax = 15;
 
+    // ParticleEffect Colour
+    [SerializeField] private Material gameObjectMaterial;
+
     #endregion
 
     #region Methods
+
+    #region Unity Methods
 
     private void Awake()
     {
@@ -27,11 +32,44 @@ public class Skull : MonoBehaviour
         DeactivateFood();
     }
 
+    private void OnEnable()
+    {
+        SetPosition();
+        MoveObject();
+    }
+
+    /*
     private void OnMouseDown()
     {
-        this.gameObject.SetActive(false);
         GetGameMode();
+        SpawnParticleEffect();
+        this.gameObject.SetActive(false);   // Deactivate gameObject
     }
+    */
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "SwipeTrail")
+        {
+            GetGameMode();
+            this.gameObject.SetActive(false);   // Deactivate gameObject
+            SpawnParticleEffect();
+        }
+        else if (other.gameObject.tag == "LeftEdge")   // Colliding Left Edge
+        {
+            objectRigidbody.AddForce(Vector3.right * horizontalForce / 2, ForceMode.Impulse);
+        }
+        else if (other.gameObject.tag == "RightEdge")   // Colliding Right Edge
+        {
+            objectRigidbody.AddForce(Vector3.left * horizontalForce / 2, ForceMode.Impulse);
+        }
+        else if (other.gameObject.tag == "TopEdge")
+        {
+            objectRigidbody.AddForce(Vector3.down * verticalForceMax / 2, ForceMode.Impulse);
+        }
+    }
+
+    #endregion Unity Methods
 
     private void GetGameMode()
     {
@@ -80,12 +118,15 @@ public class Skull : MonoBehaviour
         if (this.gameObject.transform.position.y <= -7f) this.gameObject.SetActive(false);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void SpawnParticleEffect()
     {
-        // Colliding Left Edge
-        if (this.gameObject.transform.position.x < 0.0f) objectRigidbody.AddForce(Vector3.right * horizontalForce, ForceMode.Impulse);
-        // Colliding Right Edge
-        else if (this.gameObject.transform.position.x > 0.0f) objectRigidbody.AddForce(Vector3.left * horizontalForce, ForceMode.Impulse);
+        GameObject gameObject = Particle_Spawner.SharedInstance.GetPooledObject();
+        if (gameObject != null)
+        {
+            gameObject.GetComponent<Renderer>().material = gameObjectMaterial;
+            gameObject.transform.position = this.gameObject.transform.position;
+            gameObject.SetActive(true);
+        }
     }
 
     #endregion

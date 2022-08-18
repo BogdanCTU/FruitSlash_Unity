@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 1996815852551578139}
   - component: {fileID: 1996815852548186683}
   - component: {fileID: 1996815852549284091}
-  - component: {fileID: 738898354845119966}
   - component: {fileID: 1164247193}
+  - component: {fileID: 4026946545480134523}
   - component: {fileID: 29086873}
   m_Layer: 0
   m_Name: Pizza
@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1996815852551578139
 Transform:
   m_ObjectHideFlags: 0
@@ -31,6 +31,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0.7071068, z: -0.7071068, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.5000001, y: 1.5000001, z: 1.5000001}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -54,6 +55,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
@@ -84,20 +86,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &738898354845119966
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1996815852551487035}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 0169642a95e8fce49b967cc4543bcdd8, type: 3}
 --- !u!54 &1164247193
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -114,6 +102,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 8
   m_CollisionDetection: 0
+--- !u!135 &4026946545480134523
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996815852551487035}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.2820603
+  m_Center: {x: 0, y: -3.140236e-16, z: -0.042509392}
 --- !u!114 &29086873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,3 +130,11 @@ MonoBehaviour:
   name: Pizza
   points: 20
   bonusTyme: 2
+  materials:
+  - {fileID: 2100000, guid: 675292afddd494b49b7f941102faa870, type: 2}
+  - {fileID: 2100000, guid: e3d9f950092af9a45a39c556ec2a77c0, type: 2}
+  - {fileID: 2100000, guid: 18e453f7118b2e04e85b2f5c70222d09, type: 2}
+  foods:
+  - Cookie
+  - Steak
+  - Pizza

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,22 +10,18 @@ public class Gameplay_Controller : MonoBehaviour
 
     #region Gameplay_Data
 
-    private int actualScore, lives;
-    public int gameMode = 1;   // gameMode {0 - easy, 1 - medium, 2 - hard}
-    private float timeLeft;
+    public int actualScore, lives, gameMode = 1;   // gameMode {0 - easy, 1 - medium, 2 - hard}
+    public float timeLeft;
+
+    // Temp Data for Pause State
+    public float timeTemp;
+    public int scoreTemp, livesTemp;
 
     // Gameplay Spawners
     [SerializeField]
     private GameObject[] foodSpawners, skullSpawners;
 
     #endregion Gameplay_Data
-
-    #region UI_Elements
-
-    [SerializeField]
-    private Text scoreText, livestext, timerText;
-
-    #endregion UI_Elements
 
     #endregion
 
@@ -43,19 +37,37 @@ public class Gameplay_Controller : MonoBehaviour
     {
         InitialiseGameMode();
         InitialiseGameData();
-        InitialiseUI();
+        GameplayUI_Controller.SharedInstance.InitialiseUI();
     }
 
     private void FixedUpdate()   // FixedUpdate is called once every fixed interval
                                  // (setted on project settings)
     {
-        UpdateUI();
-        IsGameFinished();
+        GameplayUI_Controller.SharedInstance.UpdateUI();
+        GameplayUI_Controller.SharedInstance.IsGameFinished();
+    }
+
+    #region Initialisators
+
+    public void InitialiseGameData()
+    {
+        if(gameMode == 0 || gameMode == 1 || gameMode == 2)
+        {
+            actualScore = 0;
+            lives = 3;
+            timeLeft = 60.0f;
+        }
+        else if(gameMode == 3)
+        {
+            actualScore = 0;
+            lives = 1;
+            timeLeft = 30.0f;
+        }
     }
 
     private void InitialiseGameMode()
     {
-        if(gameMode == 0)   // Easy
+        if (gameMode == 0)   // Easy
         {
             foodSpawners[0].SetActive(true);
             foodSpawners[1].SetActive(true);
@@ -84,54 +96,47 @@ public class Gameplay_Controller : MonoBehaviour
         }
     }
 
-    #region Initialisators
-    private void InitialiseGameData()
-    {
-        if(gameMode == 0 || gameMode == 1 || gameMode == 2)
-        {
-            actualScore = 0;
-            lives = 3;
-            timeLeft = 60.0f;
-        }
-        else if(gameMode == 3)
-        {
-            actualScore = 0;
-            lives = 1;
-            timeLeft = 30.0f;
-        }
-    }
-
-    private void InitialiseUI()
-    {
-        // Player Score
-        scoreText.text = "Score: " + actualScore;
-
-        // Player Lives
-        livestext.text = "Lives: " + lives;
-
-        // Time Left
-        timerText.text = "00:" + (int)timeLeft;
-    }
     #endregion Initialisators
 
-    private void UpdateUI()
+    #region Pausing Game
+
+    public void PauseGame()
     {
-        // Player Score
-        scoreText.text = "Score: " + actualScore;
+        // Deactivating Game Spawners
+        foodSpawners[0].SetActive(false);
+        foodSpawners[1].SetActive(false);
+        foodSpawners[2].SetActive(false);
+        foodSpawners[3].SetActive(false);
+        skullSpawners[0].SetActive(false);
+        skullSpawners[1].SetActive(false);
 
-        // Player Lives
-        livestext.text = "Lives: " + lives;
-
-        // Time Left
-        timeLeft = timeLeft - Time.deltaTime;
-        if (timeLeft >= 10) timerText.text = "00:" + (int)timeLeft;
-        else if (timeLeft < 10) timerText.text = "00:0" + (int)timeLeft;
+        SaveTempData();   // Saving Temp Game Data
     }
 
-    private void IsGameFinished()
+    public void ResumeGame()   // Reloading precedent Game Data
     {
-        
+        InitialiseGameMode();
+        timeLeft = timeTemp;
+        lives = livesTemp;
     }
+
+    public void ResumeGameExtra()   // Reloading precedent Game Data
+    {
+        InitialiseGameMode();
+        timeLeft = timeTemp;
+        lives = 1;
+    }
+
+    public void SaveTempData()   // Need to save Temp Data in case of Pause State or Game Finished State
+                                 // In order to resume previous Game State
+    {
+        timeTemp = timeLeft;
+        timeLeft += 99999;
+        livesTemp = lives;
+        lives += 99999;
+    }
+
+    #endregion Pausing Game
 
     #region Getters/Setters
 
