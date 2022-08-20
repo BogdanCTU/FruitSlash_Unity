@@ -44,3 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53571556d91ce464f8cc798b6384f13a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nextGameMode: 0
+  highScore: 200
+  coins: 0
+  diamonds: 0
+  isGameStartedFirstTime: 1

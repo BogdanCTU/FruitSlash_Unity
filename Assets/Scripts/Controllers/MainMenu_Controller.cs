@@ -1,6 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenu_Controller : MonoBehaviour
@@ -12,75 +12,95 @@ public class MainMenu_Controller : MonoBehaviour
 
     #region Pannels
 
-    [SerializeField]
-    private Canvas mainMenuCanvas, gamePlayCanvas;
+    // UI
+    [SerializeField] private GameObject difficultyPanel;
+    [SerializeField] private Text coinText, diamondText;
 
-    [SerializeField]
-    private Animator difficultyPanelAnimator;
+    // Difficulty Panel
     private bool difficultyPanelHidden = true;
 
-    [SerializeField]
-    private Button playButton;
+    // Buttons
+    [SerializeField] private Button playButton, easyButton, mediumButton, hardButton;
 
-    #endregion
+    #endregion Pannels
 
-    #endregion
+    #endregion Variables
 
     #region Methods
 
     private void Awake()
     {
         if (SharedInstance == null) SharedInstance = this;
+        UpdateUI();
+        Shop_Controller.SharedInstancel.InitialiseShopUI();
+    }
+
+    public void UpdateUI()
+    {
+        coinText.text = "" + GameData_Controller.SharedInstance.coins;
+        diamondText.text = "" + GameData_Controller.SharedInstance.diamonds;
     }
 
     #region Buttons
 
     public void PlayButtonClicked()
     {
-        playButton.gameObject.GetComponent<Button>().enabled = false;
+        playButton.gameObject.SetActive(false);
         if (difficultyPanelHidden)
         {
-            difficultyPanelAnimator.Play("DifficultyPanelZoomIn");
+            difficultyPanel.gameObject.SetActive(true);
+            difficultyPanelHidden = false;
         }
-        else
+    }
+
+    public void CloseDifficultyPanelButtonClicked()
+    {
+        playButton.gameObject.SetActive(true);
+        if (!difficultyPanelHidden)
         {
-            difficultyPanelAnimator.Play("DifficultyPanelZoomOut");
+            difficultyPanel.gameObject.SetActive(false);
+            difficultyPanelHidden = true;
         }
+    }
+
+    IEnumerator WaitHidingAnimation()
+    {
+        yield return new WaitForSecondsRealtime(1.2f);
+        difficultyPanel.gameObject.SetActive(false);
+        difficultyPanelHidden = true;
     }
 
     public void EasyButtonClicked()
     {
-        mainMenuCanvas.gameObject.SetActive(false);
-        gamePlayCanvas.gameObject.SetActive(true);
-        Gameplay_Controller.SharedInstance.SetGameMode(0);
-        Gameplay_Controller.SharedInstance.InitialiseGameplay();
+        GameData_Controller.SharedInstance.nextGameMode = 0;
+        StartCoroutine(ScreenChangerTime());
     }
 
     public void MediumButtonClicked()
     {
-        mainMenuCanvas.gameObject.SetActive(false);
-        gamePlayCanvas.gameObject.SetActive(true);
-        Gameplay_Controller.SharedInstance.SetGameMode(1);
-        Gameplay_Controller.SharedInstance.InitialiseGameplay();
+        GameData_Controller.SharedInstance.nextGameMode = 1;
+        StartCoroutine(ScreenChangerTime());
     }
 
     public void HardButtonClicked()
     {
-        mainMenuCanvas.gameObject.SetActive(false);
-        gamePlayCanvas.gameObject.SetActive(true);
-        Gameplay_Controller.SharedInstance.SetGameMode(2);
-        Gameplay_Controller.SharedInstance.InitialiseGameplay();
+        GameData_Controller.SharedInstance.nextGameMode = 2;
+        StartCoroutine(ScreenChangerTime());
     }
 
-    public void MainMenuSetActiveTrue()
+    #endregion Buttons
+
+    #region UI Animations
+
+    IEnumerator ScreenChangerTime()
     {
-        mainMenuCanvas.gameObject.SetActive(true);
-        gamePlayCanvas.gameObject.SetActive(false);
-        playButton.gameObject.GetComponent<Button>().enabled = true;
+        yield return new WaitForSecondsRealtime(1.6f);
+        SceneManager.UnloadSceneAsync(0);
+        SceneManager.LoadScene(1);
     }
 
-    #endregion
+    #endregion UI Animations
 
-    #endregion
+    #endregion Methods
 }
 // EOF - End Of File

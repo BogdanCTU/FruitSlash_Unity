@@ -38,61 +38,43 @@ public class Enemy : MonoBehaviour
         MoveObject();
     }
 
-    /*
-    private void OnMouseDown()
-    {
-        GetGameMode();
-        SpawnParticleEffect();
-        this.gameObject.SetActive(false);   // Deactivate gameObject
-    }
-    */
-
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "SwipeTrail")
+        switch (other.gameObject.tag)
         {
-            GetGameMode();
-            this.gameObject.SetActive(false);   // Deactivate gameObject
-            SpawnParticleEffect();
-        }
-        else if (other.gameObject.tag == "LeftEdge")   // Colliding Left Edge
-        {
-            objectRigidbody.AddForce(Vector3.right * horizontalForce / 2, ForceMode.Impulse);
-        }
-        else if (other.gameObject.tag == "RightEdge")   // Colliding Right Edge
-        {
-            objectRigidbody.AddForce(Vector3.left * horizontalForce / 2, ForceMode.Impulse);
-        }
-        else if (other.gameObject.tag == "TopEdge")
-        {
-            objectRigidbody.AddForce(Vector3.down * verticalForceMax / 2, ForceMode.Impulse);
+            case "SwipeTrail":
+                {
+                    Gameplay_Controller.SharedInstance.GetGameModeEnemy();   // Subtracting lives or time according to game difficulty
+                    this.gameObject.SetActive(false);   // Deactivate gameObject
+                    SpawnParticleEffect();
+                    break;
+                }
+            case "LeftEdge":
+                {
+                    objectRigidbody.AddForce(Vector3.right * horizontalForce / 2, ForceMode.Impulse);
+                    break;
+                }
+            case "RightEdge":
+                {
+                    objectRigidbody.AddForce(Vector3.left * horizontalForce / 2, ForceMode.Impulse);
+                    break;
+                }
+            case "TopEdge":
+                {
+                    objectRigidbody.AddForce(Vector3.down * verticalForceMax / 2, ForceMode.Impulse);
+                    break;
+                }
         }
     }
 
     #endregion Unity Methods
 
-    private void GetGameMode()
-    {
-        int gameMode = Gameplay_Controller.SharedInstance.GetGameMode();
-        if (gameMode == 0)   // Easy
-        {
-            Gameplay_Controller.SharedInstance.SubtractTime(1.0f);
-        }
-        else if (gameMode == 1)   // Medium
-        {
-            Gameplay_Controller.SharedInstance.SubtractTime(1.0f);
-            Gameplay_Controller.SharedInstance.SubtractLife();
-        }
-        else if (gameMode == 2)   // Hard
-        {
-            Gameplay_Controller.SharedInstance.SubtractTime(5.0f);
-            Gameplay_Controller.SharedInstance.SubtractLife();
-        }
-    }
+    #region Object Movement and Position
 
     public void SetPosition()
     {
-        Vector3 pos = new Vector3(Random.Range(-2.5f, 2.5f), -6.0f, 0);
+        // Spawning game object at a random position under the visible bottom edge
+        Vector3 pos = new Vector3(Random.Range(-2.5f, 2.5f), -5.5f, 0);
         this.gameObject.transform.position = pos;
     }
 
@@ -104,7 +86,7 @@ public class Enemy : MonoBehaviour
         // Moving the food game object up
         objectRigidbody.AddForce(Vector3.up * Random.Range(verticalForceMin, verticalForceMax), ForceMode.Impulse);   // ForceMode.Impulse is used to apply on instant the movement
 
-        // Moving the food game object left or right
+        // Moving the food game object left or right based on it's spawn position
         horizontalForce = Random.Range(horizontalForceMin, horizontalForceMax);
         if (this.gameObject.transform.position.x < 0.0f) objectRigidbody.AddForce(Vector3.right * horizontalForce, ForceMode.Impulse);
         else if (this.gameObject.transform.position.x > 0.0f) objectRigidbody.AddForce(Vector3.left * horizontalForce, ForceMode.Impulse);
@@ -115,8 +97,10 @@ public class Enemy : MonoBehaviour
 
     public void DeactivateFood()
     {
-        if (this.gameObject.transform.position.y <= -7f) this.gameObject.SetActive(false);
+        if (this.gameObject.transform.position.y <= -5.6f) this.gameObject.SetActive(false);
     }
+
+    #endregion Object Movement and Position
 
     private void SpawnParticleEffect()
     {
@@ -129,6 +113,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    #endregion
+    #endregion Methods
 }
    // EOF - End Of File

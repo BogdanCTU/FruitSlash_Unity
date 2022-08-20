@@ -32,7 +32,7 @@ public class Enemy_Spawner : MonoBehaviour
 
     #region Unity Methods
 
-    protected void Awake()
+    private void Awake()
     {
         if (SharedInstance == null) SharedInstance = this;
 
@@ -40,19 +40,19 @@ public class Enemy_Spawner : MonoBehaviour
         nextObjectTimer = Random.Range(nextObjectTimerMin, nextObjectTimerMax);
 
         SetObjectsToPull();
-        StartCoroutine("SpawnObject");
+        StartCoroutine(SpawnObject());
     }
 
     private void OnEnable()
     {
-        StartCoroutine("SpawnObject");
+        StartCoroutine(SpawnObject());
     }
 
     #endregion Unity Methods
 
     #region Object Pooling Method
 
-    protected void SetObjectsToPull()
+    private void SetObjectsToPull()
     {
         pooledObjects = new List<GameObject>();
         GameObject gameObjectTmp;
@@ -88,9 +88,8 @@ public class Enemy_Spawner : MonoBehaviour
 
     #endregion Object Pooling Method
 
-    protected IEnumerator SpawnObject()
+    private IEnumerator SpawnObject()
     {
-        Debug.Log("Coroutine - started!");
         GameObject gameObject = Enemy_Spawner.SharedInstance.GetPooledObject();
         if (gameObject != null)
         {

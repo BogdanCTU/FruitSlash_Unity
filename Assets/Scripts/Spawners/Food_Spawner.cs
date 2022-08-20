@@ -43,12 +43,12 @@ public class Food_Spawner : MonoBehaviour
         nextObjectTimer = Random.Range(nextObjectTimerMin, nextObjectTimerMax);
 
         SetObjectsToPull();
-        StartCoroutine("SpawnObject");
+        StartCoroutine(SpawnObject());
     }
 
     private void OnEnable()
     {
-        StartCoroutine("SpawnObject");
+        StartCoroutine(SpawnObject());
     }
 
     #endregion Unity Methods
@@ -96,8 +96,6 @@ public class Food_Spawner : MonoBehaviour
 
     protected IEnumerator SpawnObject()
     {
-        Debug.Log("Coroutine - started!");
-
         RandomFoodType();   // Randomise food to spawn
 
         GameObject objectToSpawn = GetPooledObject(objectTag);
@@ -120,9 +118,24 @@ public class Food_Spawner : MonoBehaviour
     {
         // Randomise FoodType to spawn
         objectType = Random.Range(0, 3);   // The max value is excluded
-        if (objectType == 0) objectTag = "Cookie";
-        else if (objectType == 1) objectTag = "Steak";
-        else if (objectType == 2) objectTag = "Pizza";
+        switch (objectType)
+        {
+            case 0:
+                {
+                    objectTag = "Cookie";
+                    break;
+                }
+            case 1:
+                {
+                    objectTag = "Steak";
+                    break;
+                }
+            case 2:
+                {
+                    objectTag = "Pizza";
+                    break;
+                }
+        }
     }
 
     #region Getters/Setters
@@ -133,9 +146,9 @@ public class Food_Spawner : MonoBehaviour
     public void SetMaxSpawnObjectTime(float maxTime) { this.nextObjectTimerMax = maxTime; }
     public float GetMaxSpawnObjectTime() { return this.nextObjectTimerMax; }
 
-    #endregion
+    #endregion Getters/Setters
 
-    #endregion
+    #endregion Methods
 }
 
 [System.Serializable]

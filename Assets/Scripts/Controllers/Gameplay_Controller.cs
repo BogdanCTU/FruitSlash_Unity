@@ -35,14 +35,15 @@ public class Gameplay_Controller : MonoBehaviour
 
     public void InitialiseGameplay()
     {
+        gameMode = GameData_Controller.SharedInstance.nextGameMode;
         InitialiseGameMode();
         InitialiseGameData();
-        GameplayUI_Controller.SharedInstance.InitialiseUI();
     }
 
     private void FixedUpdate()   // FixedUpdate is called once every fixed interval
                                  // (setted on project settings)
     {
+        if (GameplayUI_Controller.SharedInstance.startigTime > 0) GameplayUI_Controller.SharedInstance.RunStartingTimer();
         GameplayUI_Controller.SharedInstance.UpdateUI();
         GameplayUI_Controller.SharedInstance.IsGameFinished();
     }
@@ -98,6 +99,48 @@ public class Gameplay_Controller : MonoBehaviour
 
     #endregion Initialisators
 
+    #region GameMode
+
+    public void GetGameModeEnemy()   // Subtracting lives or time according to game difficulty
+    {
+        if (gameMode == 0)   // Easy
+        {
+            timeLeft -= 4.0f;
+        }
+        else if (gameMode == 1)   // Medium
+        {
+            timeLeft -= 2.5f;
+            lives--;
+        }
+        else if (gameMode == 2)   // Hard
+        {
+            timeLeft -= 5.0f;
+            lives--;
+        }
+    }
+
+    public void GetGameModeFood(int points, int bonusTime)
+    {
+        if (gameMode == 0)   // Easy
+        {
+            actualScore += points;   // SetNewScore
+            timeLeft += bonusTime;   // SetNewTime
+        }
+        else if (gameMode == 1)   // Medium
+        {
+            actualScore += (points * 2);   // SetNewScore
+            timeLeft += (bonusTime / 2);   // SetNewTime
+        }
+        else if (gameMode == 2)   // Hard
+        {
+            actualScore += (points * 3);   // SetNewScore
+            timeLeft += (bonusTime / 4);   // SetNewTime
+        }
+    }
+
+    #endregion GameMode
+
+
     #region Pausing Game
 
     public void PauseGame()
@@ -134,6 +177,15 @@ public class Gameplay_Controller : MonoBehaviour
         timeLeft += 99999;
         livesTemp = lives;
         lives += 99999;
+    }
+
+    public void SaveGameData()
+    {
+        if (actualScore > GameData_Controller.SharedInstance.highScore) GameData_Controller.SharedInstance.highScore = actualScore;   // Setting High Score
+        GameData_Controller.SharedInstance.coins += actualScore;
+        GameData_Controller.SharedInstance.diamonds += livesTemp;
+        GameData_Controller.SharedInstance.Save();
+        Debug.Log("Saving GameData: {" + GameData_Controller.SharedInstance.highScore + "B$, " + GameData_Controller.SharedInstance.coins + " $, " + GameData_Controller.SharedInstance.diamonds + " <3");
     }
 
     #endregion Pausing Game

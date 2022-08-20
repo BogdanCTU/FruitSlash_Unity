@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 0}
-  livestext: {fileID: 0}
+  livesText: {fileID: 0}
   timerText: {fileID: 0}
   pauseButton: {fileID: 0}
   closeButton: {fileID: 0}
@@ -53,3 +53,9 @@ MonoBehaviour:
   gameUIPanel: {fileID: 0}
   pausePanel: {fileID: 0}
   extraLifeButton: {fileID: 0}
+  bestScoreText: {fileID: 0}
+  actualScoreText: {fileID: 0}
+  livesLeftText: {fileID: 0}
+  startingTimerText: {fileID: 0}
+  startingTimerPanel: {fileID: 0}
+  startigTime: 3.9

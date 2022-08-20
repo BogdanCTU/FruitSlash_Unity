@@ -12,7 +12,7 @@ public class GameplayUI_Controller : MonoBehaviour
     #region UI_Elements
 
     // UI Text
-    [SerializeField] private Text scoreText, livestext, timerText;
+    [SerializeField] private Text scoreText, livesText, timerText;
 
     // Pause
     [SerializeField] private Button pauseButton, closeButton;
@@ -25,6 +25,12 @@ public class GameplayUI_Controller : MonoBehaviour
     // Game Finished
     [SerializeField] private Text bestScoreText, actualScoreText, livesLeftText;
 
+    // Starting Timer
+    [SerializeField] private Text startingTimerText;
+    [SerializeField] private GameObject startingTimerPanel;
+    public float startigTime = 5.0f;
+    [SerializeField] private GameObject SwipeTrail;
+
     #endregion UI_Elements
 
     #endregion
@@ -34,11 +40,13 @@ public class GameplayUI_Controller : MonoBehaviour
     private void Awake()
     {
         if (SharedInstance == null) SharedInstance = this;
+        SetStartingTimer();
+        InitialiseUI();
     }
 
     private void FixedUpdate()
     {
-        InitialiseUI();
+        if(startingTimerPanel.gameObject.activeInHierarchy) RunStartingTimer();
         UpdateUI();
         IsGameFinished();
     }
@@ -49,12 +57,6 @@ public class GameplayUI_Controller : MonoBehaviour
     {
         // Player Score
         scoreText.text = "0";
-
-        // Player Lives
-        livestext.text = "" + Gameplay_Controller.SharedInstance.lives;
-
-        // Time Left
-        timerText.text = "" + (int)Gameplay_Controller.SharedInstance.timeLeft;
     }
 
     public void UpdateUI()
@@ -63,7 +65,7 @@ public class GameplayUI_Controller : MonoBehaviour
         scoreText.text = "" + Gameplay_Controller.SharedInstance.actualScore;
 
         // Player Lives
-        livestext.text = "" + Gameplay_Controller.SharedInstance.lives;
+        livesText.text = "" + Gameplay_Controller.SharedInstance.lives;
 
         // Time Left
         Gameplay_Controller.SharedInstance.timeLeft = Gameplay_Controller.SharedInstance.timeLeft - Time.deltaTime;
@@ -72,6 +74,29 @@ public class GameplayUI_Controller : MonoBehaviour
     }
 
     #endregion UI
+
+    #region Starting Timer
+
+    public void SetStartingTimer()
+    {
+        startingTimerText.text = "" + (int)startigTime;
+        startigTime = 5.0f;
+        startingTimerPanel.gameObject.SetActive(true);
+    }
+
+    public void RunStartingTimer()
+    {
+        startigTime -= Time.deltaTime;
+        startingTimerText.text = "" + (int)startigTime;
+        if (startigTime == 0 || startigTime < 0)
+        {
+            startingTimerPanel.gameObject.SetActive(false);
+            SwipeTrail.gameObject.SetActive(true);
+        }
+    }
+
+
+    #endregion Starting Timer
 
     #region GameFinished
 
@@ -82,7 +107,7 @@ public class GameplayUI_Controller : MonoBehaviour
             // Changing Pannel and Stopping Game Pausing
             Gameplay_Controller.SharedInstance.PauseGame();
             gameUIPanel.SetActive(false);
-            gameFinishedPanel.SetActive(true);
+            gameFinishedPanel.SetActive(true); GameFinishedPanel();
             extraLifeUsed = true;
             extraLifeButton.gameObject.SetActive(false);
         }
@@ -91,7 +116,7 @@ public class GameplayUI_Controller : MonoBehaviour
             // Changing Pannel and Stopping Game Pausing
             Gameplay_Controller.SharedInstance.PauseGame();
             gameUIPanel.SetActive(false);
-            gameFinishedPanel.SetActive(true);
+            gameFinishedPanel.SetActive(true); GameFinishedPanel();
 
             // Showing or not ExtraLife Button
             if (extraLifeUsed == false && Gameplay_Controller.SharedInstance.actualScore > 1000)
@@ -102,11 +127,16 @@ public class GameplayUI_Controller : MonoBehaviour
         }
     }
 
+    private void GameFinishedPanel()
+    {
+        SwipeTrail.gameObject.SetActive(false);
+        // Updating UI Text
+        bestScoreText.text = "Best: " + GameData_Controller.SharedInstance.highScore;
+        actualScoreText.text = "Actual: " + Gameplay_Controller.SharedInstance.actualScore;
+        livesLeftText.text = "Left: " + Gameplay_Controller.SharedInstance.livesTemp;
+    }
+
     #endregion GameFinished
-
-    #region GamePaused
-
-    #endregion GamePaused
 
     #region Button Functions
 
@@ -129,6 +159,7 @@ public class GameplayUI_Controller : MonoBehaviour
         // Changing UI Panels
         gameUIPanel.gameObject.SetActive(true);
         pausePanel.gameObject.SetActive(false);
+        SetStartingTimer();
         Gameplay_Controller.SharedInstance.ResumeGame();
 
         // Resetting Gameplay Data
@@ -137,9 +168,13 @@ public class GameplayUI_Controller : MonoBehaviour
 
     public void ReplayButtonClicked()
     {
+        // Saving Game Data
+        Gameplay_Controller.SharedInstance.SaveGameData();
+
         // Changing UI Panels
         gameUIPanel.gameObject.SetActive(true);
-        pausePanel.gameObject.SetActive(false);
+        gameFinishedPanel.gameObject.SetActive(false);
+        SetStartingTimer();
         Gameplay_Controller.SharedInstance.ResumeGame();
 
         // Resetting Gameplay Data
@@ -163,7 +198,9 @@ public class GameplayUI_Controller : MonoBehaviour
 
     public void MainMenuButtonClicked()
     {
-        SceneManager.LoadScene(0);
+        Gameplay_Controller.SharedInstance.SaveGameData();   // Saving Game Data
+        SceneManager.UnloadSceneAsync(1);
+        SceneManager.LoadScene(0);   // Changing Scene to MainMenu
     }
 
     #endregion Button Functions
