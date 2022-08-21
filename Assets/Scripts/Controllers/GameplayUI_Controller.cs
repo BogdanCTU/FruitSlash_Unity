@@ -177,6 +177,7 @@ public class GameplayUI_Controller : MonoBehaviour
 
     public void PauseButtonClicked()
     {
+        Sound_Controller.SharedInstance.PlayButtonSound();
         Gameplay_Controller.SharedInstance.PauseGame();
 
         pausePanelAnimator.ResetTrigger("NotActive");
@@ -188,6 +189,7 @@ public class GameplayUI_Controller : MonoBehaviour
 
     public void ClosePauseButtonClicked()
     {
+        Sound_Controller.SharedInstance.PlayDontBuyButtonSound();
         StartCoroutine(CloseButtonClickedAnim());   // Waiting animation time
     }
 
@@ -205,6 +207,7 @@ public class GameplayUI_Controller : MonoBehaviour
 
     public void RestartButtonClicked()
     {
+        Sound_Controller.SharedInstance.PlayBuyButtonSound();
         StartCoroutine(RestartButtonClickedAnim());
     }
 
@@ -223,9 +226,9 @@ public class GameplayUI_Controller : MonoBehaviour
         Gameplay_Controller.SharedInstance.InitialiseGameData();   // Resetting Gameplay Data
     }
 
-
     public void ReplayButtonClicked()
     {
+        Sound_Controller.SharedInstance.PlayBuyButtonSound();
         StartCoroutine(ReplayButtonClickedAnim());
     }
 
@@ -250,6 +253,7 @@ public class GameplayUI_Controller : MonoBehaviour
 
     public void ExtraLifeButtonClicked()
     {
+        Sound_Controller.SharedInstance.PlayBuyButtonSound();
         StartCoroutine(ExtraLifeButtonClickedOutAnim());
     }
 
@@ -278,6 +282,7 @@ public class GameplayUI_Controller : MonoBehaviour
 
     public void MainMenuButtonClicked()
     {
+        Sound_Controller.SharedInstance.PlayDontBuyButtonSound();
         StartCoroutine(ChangeSceneMainMenu());   // Waiting animation time
     }
 

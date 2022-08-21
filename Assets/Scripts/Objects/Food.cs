@@ -110,6 +110,7 @@ public class Food : MonoBehaviour
 
     private void SpawnParticleEffect()
     {
+        Sound_Controller.SharedInstance.PlayFruitSound();
         GameObject gameObject = Particle_Spawner.SharedInstance.GetPooledObject();
         if (gameObject != null)
         {

@@ -70,6 +70,7 @@ public class Shop_Controller : MonoBehaviour
 
     public void BackgroundButtonClicked(int buttonIndex)
     {
+        Sound_Controller.SharedInstance.PlayButtonSound();
         if (GameData_Controller.SharedInstance.backgroundsUnlocked[buttonIndex] == true)
         {
             GameData_Controller.SharedInstance.activeBackground = buttonIndex;   // Setting selected background
@@ -93,11 +94,22 @@ public class Shop_Controller : MonoBehaviour
 
     public void BuyBackgroundButtonClicked()   // Confirm background purchase and updating UI
     {
+        Sound_Controller.SharedInstance.PlayBuyButtonSound();
         // Currency
         int tempPrice = backgroundPrices[selectedBackground - 1];
         GameData_Controller.SharedInstance.coins -= tempPrice;
         GameData_Controller.SharedInstance.backgroundsUnlocked[selectedBackground] = true;
 
+        StartCoroutine(CloseBuyBackgroundPanelAnimation());
+
+        // Updating UI
+        InitialiseShopUI();
+        MainMenu_Controller.SharedInstance.UpdateUI();
+    }
+
+    public void CloseBackgroundButtonClicked()   // Confirm background purchase and updating UI
+    {
+        Sound_Controller.SharedInstance.PlayDontBuyButtonSound();
         StartCoroutine(CloseBuyBackgroundPanelAnimation());
 
         // Updating UI
@@ -118,6 +130,7 @@ public class Shop_Controller : MonoBehaviour
 
     public void TrailButtonClicked(int buttonIndex)
     {
+        Sound_Controller.SharedInstance.PlayButtonSound();
         if (GameData_Controller.SharedInstance.trailsUnlocked[buttonIndex] == true)
         {
             GameData_Controller.SharedInstance.activeTrail = buttonIndex;   // Setting selected background
@@ -134,25 +147,41 @@ public class Shop_Controller : MonoBehaviour
 
     public void OpenBuyTrailPanel(int price)   // Which button was pressed
     {
-        buyTrailPanelAnimator.SetTrigger("Active");
         buyTrailPanelAnimator.ResetTrigger("NotActive");
+        buyTrailPanel.gameObject.SetActive(true);
         buyTrailPanelText.text = "Buy this item\nfor: " + price;
     }
 
     public void BuyTrailButtonClicked()   // Confirm trail purchase and updating UI
     {
+        Sound_Controller.SharedInstance.PlayBuyButtonSound();
         // Currency
         int tempPrice = trailPrices[selectedTrail - 1];
         GameData_Controller.SharedInstance.coins -= tempPrice;
         GameData_Controller.SharedInstance.trailsUnlocked[selectedTrail] = true;
 
-        // Panels
-        buyTrailPanelAnimator.SetTrigger("NotActive");
-        buyTrailPanelAnimator.ResetTrigger("Active");
+        StartCoroutine(CloseBuyTrailPanelAnimation());
 
         // Updating UI
         InitialiseShopUI();
         MainMenu_Controller.SharedInstance.UpdateUI();
+    }
+
+    public void CloseTrailButtonClicked()   // Confirm background purchase and updating UI
+    {
+        Sound_Controller.SharedInstance.PlayDontBuyButtonSound();
+        StartCoroutine(CloseBuyTrailPanelAnimation());
+
+        // Updating UI
+        InitialiseShopUI();
+        MainMenu_Controller.SharedInstance.UpdateUI();
+    }
+
+    private IEnumerator CloseBuyTrailPanelAnimation()
+    {
+        buyTrailPanelAnimator.SetTrigger("NotActive");
+        yield return new WaitForSecondsRealtime(animationTime);
+        buyTrailPanel.gameObject.SetActive(false);
     }
 
     #endregion Trails

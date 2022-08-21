@@ -104,6 +104,7 @@ public class Enemy : MonoBehaviour
 
     private void SpawnParticleEffect()
     {
+        Sound_Controller.SharedInstance.PlayEnemySound();
         GameObject gameObject = Particle_Spawner.SharedInstance.GetPooledObject();
         if (gameObject != null)
         {

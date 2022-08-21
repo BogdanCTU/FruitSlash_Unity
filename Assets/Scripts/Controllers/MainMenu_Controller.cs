@@ -61,6 +61,7 @@ public class MainMenu_Controller : MonoBehaviour
 
     public void PlayButtonClicked()
     {
+        Sound_Controller.SharedInstance.PlayButtonSound();
         StartCoroutine(PlayButtonClickedAnimation());
     }
 
@@ -80,6 +81,7 @@ public class MainMenu_Controller : MonoBehaviour
 
     public void CloseDifficultyPanelButtonClicked()
     {
+        Sound_Controller.SharedInstance.PlayDontBuyButtonSound();
         StartCoroutine(CloseDifficultyPanelButtonClickedAnimation());
     }
 
@@ -99,6 +101,7 @@ public class MainMenu_Controller : MonoBehaviour
 
     public void ShopButtonClicked()
     {
+        Sound_Controller.SharedInstance.PlayButtonSound();
         StartCoroutine(ShopButtonClickedAnimation());
     }
 
@@ -118,6 +121,7 @@ public class MainMenu_Controller : MonoBehaviour
 
     public void CloseShopButtonClicked()
     {
+        Sound_Controller.SharedInstance.PlayDontBuyButtonSound();
         StartCoroutine(CloseShopButtonClickedAnimation());
     }
 
@@ -137,18 +141,21 @@ public class MainMenu_Controller : MonoBehaviour
 
     public void EasyButtonClicked()
     {
+        Sound_Controller.SharedInstance.PlayButtonSound();
         GameData_Controller.SharedInstance.nextGameMode = 0;
         StartCoroutine(ScreenChangerTime());
     }
 
     public void MediumButtonClicked()
     {
+        Sound_Controller.SharedInstance.PlayButtonSound();
         GameData_Controller.SharedInstance.nextGameMode = 1;
         StartCoroutine(ScreenChangerTime());
     }
 
     public void HardButtonClicked()
     {
+        Sound_Controller.SharedInstance.PlayButtonSound();
         GameData_Controller.SharedInstance.nextGameMode = 2;
         StartCoroutine(ScreenChangerTime());
     }
