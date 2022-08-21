@@ -185,7 +185,6 @@ public class Gameplay_Controller : MonoBehaviour
         GameData_Controller.SharedInstance.coins += actualScore;
         GameData_Controller.SharedInstance.diamonds += livesTemp;
         GameData_Controller.SharedInstance.Save();
-        Debug.Log("Saving GameData: {" + GameData_Controller.SharedInstance.highScore + "B$, " + GameData_Controller.SharedInstance.coins + " $, " + GameData_Controller.SharedInstance.diamonds + " <3");
     }
 
     #endregion Pausing Game

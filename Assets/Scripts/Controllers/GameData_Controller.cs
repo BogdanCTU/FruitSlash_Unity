@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
@@ -60,8 +61,12 @@ public class GameData_Controller : MonoBehaviour
         try   // In order to avoid Exceptions due to IO operations
         {
             BinaryFormatter bf = new BinaryFormatter();
+            if (!File.Exists(Application.persistentDataPath + "/GameData.dat"))
+            {
+                File.Create(Application.persistentDataPath + "/GameData.dat");
+            }
             file = File.Open(Application.persistentDataPath + "/GameData.dat", FileMode.Open);
-
+            
             if (gameData != null)
             {
                 gameData.SetHighScore(highScore);
@@ -169,6 +174,7 @@ public class GameData_Controller : MonoBehaviour
     #endregion
 }
 
+[Serializable]
 class GameData
 {
     #region Variables

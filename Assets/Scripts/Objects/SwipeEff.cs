@@ -8,7 +8,7 @@ public class SwipeEff : MonoBehaviour
 {
     #region Variables
     
-    private Camera cam;
+    [SerializeField] private Camera cam;
     private Vector3 mousePos;
     private TrailRenderer trail;
     private BoxCollider col;
@@ -21,7 +21,6 @@ public class SwipeEff : MonoBehaviour
     #region Unity Methods
     void Awake()
     {
-        cam = Camera.main;
         trail = GetComponent<TrailRenderer>();
         col = GetComponent<BoxCollider>();
         trail.enabled = false;
@@ -50,8 +49,7 @@ public class SwipeEff : MonoBehaviour
 
     void UpdateMousePosition()
     {
-        mousePos = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,
-        Input.mousePosition.y, 10.0f));
+        mousePos = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10.0f));
         transform.position = mousePos;
     }
 

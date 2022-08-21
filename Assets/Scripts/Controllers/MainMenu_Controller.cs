@@ -13,14 +13,21 @@ public class MainMenu_Controller : MonoBehaviour
     #region Pannels
 
     // UI
-    [SerializeField] private GameObject difficultyPanel;
     [SerializeField] private Text coinText, diamondText;
 
     // Difficulty Panel
     private bool difficultyPanelHidden = true;
 
     // Buttons
-    [SerializeField] private Button playButton, easyButton, mediumButton, hardButton;
+    [SerializeField] private Button playButton, easyButton, mediumButton, hardButton, shopButton, closeShopButton;
+
+    // Backgrounds
+    [SerializeField] private GameObject[] backgrounds;
+
+    // Panels + Animators
+    [SerializeField] private GameObject difficultyPanel, shopPanel, buyBackgroundPanel, buyTrailPanel;
+    [SerializeField] private Animator playButtonAnimator, difficultyPanelAnimator, shopPanelAnimator, buyBackgroundPanelAnimator, buyTrailPanelAnimator;
+    [SerializeField] private const float animationTime = 1.1f; 
 
     #endregion Pannels
 
@@ -37,37 +44,95 @@ public class MainMenu_Controller : MonoBehaviour
 
     public void UpdateUI()
     {
+        // Setting UI Texts
         coinText.text = "" + GameData_Controller.SharedInstance.coins;
         diamondText.text = "" + GameData_Controller.SharedInstance.diamonds;
+
+        backgrounds[GameData_Controller.SharedInstance.activeBackground].gameObject.SetActive(true);
+
+        for(int i = 0; i < GameData_Controller.SharedInstance.backgroundsUnlocked.Length; i++)   // Setting the active and selected background
+        {
+            if (i == GameData_Controller.SharedInstance.activeBackground) backgrounds[i].gameObject.SetActive(true);
+            else backgrounds[i].gameObject.SetActive(false);
+        }
     }
 
     #region Buttons
 
     public void PlayButtonClicked()
     {
+        StartCoroutine(PlayButtonClickedAnimation());
+    }
+
+    private IEnumerator PlayButtonClickedAnimation()
+    {
+        difficultyPanelAnimator.ResetTrigger("NotActive");
+        playButtonAnimator.SetTrigger("NotActive");   // Out Animation
+        difficultyPanel.gameObject.SetActive(true);
+
+        yield return new WaitForSecondsRealtime(animationTime);
+
         playButton.gameObject.SetActive(false);
-        if (difficultyPanelHidden)
-        {
-            difficultyPanel.gameObject.SetActive(true);
-            difficultyPanelHidden = false;
-        }
+        shopPanel.gameObject.SetActive(false);
+        buyBackgroundPanel.gameObject.SetActive(false);
+        buyTrailPanel.gameObject.SetActive(false);
     }
 
     public void CloseDifficultyPanelButtonClicked()
     {
-        playButton.gameObject.SetActive(true);
-        if (!difficultyPanelHidden)
-        {
-            difficultyPanel.gameObject.SetActive(false);
-            difficultyPanelHidden = true;
-        }
+        StartCoroutine(CloseDifficultyPanelButtonClickedAnimation());
     }
 
-    IEnumerator WaitHidingAnimation()
+    private IEnumerator CloseDifficultyPanelButtonClickedAnimation()
     {
-        yield return new WaitForSecondsRealtime(1.2f);
+        playButtonAnimator.ResetTrigger("NotActive");   
+        playButton.gameObject.SetActive(true);
+        difficultyPanelAnimator.SetTrigger("NotActive");   // Out Animation
+
+        yield return new WaitForSecondsRealtime(animationTime);
+
         difficultyPanel.gameObject.SetActive(false);
-        difficultyPanelHidden = true;
+        shopPanel.gameObject.SetActive(false);
+        buyBackgroundPanel.gameObject.SetActive(false);
+        buyTrailPanel.gameObject.SetActive(false);
+    }
+
+    public void ShopButtonClicked()
+    {
+        StartCoroutine(ShopButtonClickedAnimation());
+    }
+
+    private IEnumerator ShopButtonClickedAnimation()
+    {
+        shopPanelAnimator.ResetTrigger("NotActive");
+        difficultyPanelAnimator.SetTrigger("NotActive");
+        shopPanel.gameObject.SetActive(true);
+
+        yield return new WaitForSecondsRealtime(animationTime);
+
+        difficultyPanel.gameObject.SetActive(false);
+        playButton.gameObject.SetActive(false);
+        buyBackgroundPanel.gameObject.SetActive(false);
+        buyTrailPanel.gameObject.SetActive(false);
+    }
+
+    public void CloseShopButtonClicked()
+    {
+        StartCoroutine(CloseShopButtonClickedAnimation());
+    }
+
+    private IEnumerator CloseShopButtonClickedAnimation()
+    {
+        shopPanelAnimator.SetTrigger("NotActive");
+        playButtonAnimator.ResetTrigger("NotActive");
+        playButton.gameObject.SetActive(true);
+
+        yield return new WaitForSecondsRealtime(animationTime);
+
+        shopPanel.gameObject.SetActive(false);
+        difficultyPanel.gameObject.SetActive(false);
+        buyBackgroundPanel.gameObject.SetActive(false);
+        buyTrailPanel.gameObject.SetActive(false);
     }
 
     public void EasyButtonClicked()
@@ -90,7 +155,7 @@ public class MainMenu_Controller : MonoBehaviour
 
     #endregion Buttons
 
-    #region UI Animations
+    #region Screen Changer
 
     IEnumerator ScreenChangerTime()
     {
@@ -99,7 +164,7 @@ public class MainMenu_Controller : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
-    #endregion UI Animations
+    #endregion Screen Changer
 
     #endregion Methods
 }
