@@ -156,7 +156,6 @@ public class GameplayUI_Controller : MonoBehaviour
 
     public void GameFinishedPanel()
     {
-        trails[GameData_Controller.SharedInstance.activeTrail].gameObject.SetActive(false);
         // Updating UI Text
         bestScoreText.text = "Best: " + GameData_Controller.SharedInstance.highScore;
         actualScoreText.text = "Actual: " + Gameplay_Controller.SharedInstance.actualScore;
@@ -268,9 +267,11 @@ public class GameplayUI_Controller : MonoBehaviour
         gameFinishedPanelAnimator.SetTrigger("NotActive");   // Out Animation
         gameFinishedPanelAnimator.ResetTrigger("Active");
         gamePanelUIAnimator.ResetTrigger("NotActive");
+        gamePanelUIAnimator.SetTrigger("Active");
 
         yield return new WaitForSecondsRealtime(1.1f);
 
+        
         gameFinishedPanel.gameObject.SetActive(false);
         pausePanel.gameObject.SetActive(false);
         extraLifeButton.gameObject.SetActive(false);

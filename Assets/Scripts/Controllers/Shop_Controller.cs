@@ -105,6 +105,7 @@ public class Shop_Controller : MonoBehaviour
         // Updating UI
         InitialiseShopUI();
         MainMenu_Controller.SharedInstance.UpdateUI();
+        GameData_Controller.SharedInstance.Save();   // Saving New Data
     }
 
     public void CloseBackgroundButtonClicked()   // Confirm background purchase and updating UI
@@ -161,10 +162,11 @@ public class Shop_Controller : MonoBehaviour
         GameData_Controller.SharedInstance.trailsUnlocked[selectedTrail] = true;
 
         StartCoroutine(CloseBuyTrailPanelAnimation());
-
+        
         // Updating UI
         InitialiseShopUI();
         MainMenu_Controller.SharedInstance.UpdateUI();
+        GameData_Controller.SharedInstance.Save();   // Saving New Data
     }
 
     public void CloseTrailButtonClicked()   // Confirm background purchase and updating UI
