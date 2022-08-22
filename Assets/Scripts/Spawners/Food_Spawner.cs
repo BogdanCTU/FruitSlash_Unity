@@ -8,28 +8,23 @@ public class Food_Spawner : MonoBehaviour
     #region Variables
 
     #region PoolingMethod
+
     // Shared Instance
     public static Food_Spawner SharedInstance;
 
     // Pooling List
-    [SerializeField]
-    private List<GameObject> pooledObjects;
+    [SerializeField] private List<GameObject> pooledObjects;
 
     // ObjectsToPool Class
-    [SerializeField]
-    private List<ObjectPoolItem> itemsToPool;
-    #endregion
+    [SerializeField] private List<ObjectPoolItem> itemsToPool;
 
-    // Object to pull tag and type
-    protected string objectTag;    // objectTag  {cookie, steak, pizza}
-    protected int objectType;      // objectType {  0   ,   1  ,   2  }
+    #endregion
 
     // Timers
-    [SerializeField]
-    protected float nextObjectTimerMin = 2.0f, nextObjectTimerMax = 3.0f;
-    protected float nextObjectTimer;
+    [SerializeField] private float nextObjectTimerMin = 2.0f, nextObjectTimerMax = 3.0f;
+    private float nextObjectTimer;
 
-    #endregion
+    #endregion Variables
 
     #region Methods
 
@@ -96,14 +91,12 @@ public class Food_Spawner : MonoBehaviour
 
     protected IEnumerator SpawnObject()
     {
-        RandomFoodType();   // Randomise food to spawn
+        string objectTag = RandomFoodType();    // objectTag  {Fruit1, Fruit2, Fruit3}
 
         GameObject objectToSpawn = GetPooledObject(objectTag);
         if (objectToSpawn != null)
         {
             objectToSpawn.SetActive(true);
-            objectToSpawn.GetComponent<Food>().SetPosition();
-            objectToSpawn.GetComponent<Food>().MoveObject();
         }
 
         // Code will be executer before starting timer
@@ -111,42 +104,28 @@ public class Food_Spawner : MonoBehaviour
         // Code will be executed after time is over
 
         nextObjectTimer = Random.Range(nextObjectTimerMin, nextObjectTimerMax);
-        StartCoroutine("SpawnObject");
+        StartCoroutine(SpawnObject());
     }
 
-    private void RandomFoodType()
+    private string RandomFoodType()
     {
         // Randomise FoodType to spawn
-        objectType = Random.Range(0, 3);   // The max value is excluded
+        int objectType = Random.Range(0, 3);   // The max value is excluded
         switch (objectType)
         {
             case 0:
-                {
-                    objectTag = "Cookie";
-                    break;
-                }
+                return "Fruit1";
+                
             case 1:
-                {
-                    objectTag = "Steak";
-                    break;
-                }
+                return "Fruit2";
+                
             case 2:
-                {
-                    objectTag = "Pizza";
-                    break;
-                }
+                return "Fruit3";
+                
+            default:
+                return "Fruit1";
         }
     }
-
-    #region Getters/Setters
-
-    public void SetMinSpawnObjectTime(float minTime) { this.nextObjectTimerMin = minTime; }
-    public float GetMinSpawnObjectTime() { return this.nextObjectTimerMin; }
-
-    public void SetMaxSpawnObjectTime(float maxTime) { this.nextObjectTimerMax = maxTime; }
-    public float GetMaxSpawnObjectTime() { return this.nextObjectTimerMax; }
-
-    #endregion Getters/Setters
 
     #endregion Methods
 }

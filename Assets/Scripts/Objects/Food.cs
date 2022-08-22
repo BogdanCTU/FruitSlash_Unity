@@ -6,20 +6,14 @@ public class Food : MonoBehaviour
 {
     #region Variables
 
-    [SerializeField]
-    private new string name;
-    [SerializeField]
-    private int points, bonusTyme;
+    //[SerializeField] private new string name;
+    [SerializeField] private int points, bonusTyme;
 
     // Object RigidBody
-    private Rigidbody objectRigidbody;
+    [SerializeField] private Rigidbody objectRigidbody;
 
     // Horizontal Forces
-    protected static float horizontalForce, horizontalForceMin = 2, horizontalForceMax = 5, verticalForceMin = 6, verticalForceMax = 10;
-
-    // Particle Effect Colour
-    [SerializeField] private Material[] materials;
-    [SerializeField] private string[] foods;
+    [SerializeField] private float horizontalForce, horizontalForceMin = 2, horizontalForceMax = 5, verticalForceMin = 6, verticalForceMax = 10;
 
     #endregion
 
@@ -52,7 +46,7 @@ public class Food : MonoBehaviour
                 {
                     Gameplay_Controller.SharedInstance.GetGameModeFood(points, bonusTyme);   // Adding lives or time according to game difficulty
                     this.gameObject.SetActive(false);   // Deactivate gameObject
-                    SpawnParticleEffect();
+                    Particle_Spawner.SharedInstance.SpawnParticleEffect(this.gameObject);
                     break;
                 }
             case "LeftEdge":
@@ -107,24 +101,6 @@ public class Food : MonoBehaviour
     }
 
     #endregion Object Movement and Position
-
-    private void SpawnParticleEffect()
-    {
-        Sound_Controller.SharedInstance.PlayFruitSound();
-        GameObject gameObject = Particle_Spawner.SharedInstance.GetPooledObject();
-        if (gameObject != null)
-        {
-            for (int i = 0; i < materials.Length; i++)
-            {
-                if (this.gameObject.tag == foods[i])
-                {
-                    gameObject.GetComponent<Renderer>().material = materials[i];
-                }
-            }
-            gameObject.transform.position = this.gameObject.transform.position;
-            gameObject.SetActive(true);
-        }
-    }
 
     #endregion
 }

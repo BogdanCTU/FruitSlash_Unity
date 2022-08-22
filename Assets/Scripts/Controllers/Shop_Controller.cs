@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +6,7 @@ public class Shop_Controller : MonoBehaviour
 {
     #region Variables
 
-    public static Shop_Controller SharedInstancel;
+    public static Shop_Controller SharedInstance;
 
     // Backgrounds Elements
     [SerializeField] private int selectedBackground;
@@ -39,7 +37,7 @@ public class Shop_Controller : MonoBehaviour
 
     private void Awake()
     {
-        SharedInstancel = this;
+        if (SharedInstance == null) SharedInstance = this;
     }
 
     public void InitialiseShopUI()

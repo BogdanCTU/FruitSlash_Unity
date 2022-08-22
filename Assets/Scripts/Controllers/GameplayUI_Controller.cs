@@ -46,6 +46,9 @@ public class GameplayUI_Controller : MonoBehaviour
     // Animation Time
     [SerializeField] private const float animationTime = 1.1f;
 
+    // Spam Click Blocker
+    [SerializeField] private GameObject clickBlockerPanel;
+
     #endregion UI_Elements
 
     #endregion Variables
@@ -133,8 +136,7 @@ public class GameplayUI_Controller : MonoBehaviour
     {
         if (Gameplay_Controller.SharedInstance.timeLeft == 0 || Gameplay_Controller.SharedInstance.timeLeft < 0)
         {
-            Gameplay_Controller.SharedInstance.PauseGame();
-            GameFinishedPanel();
+            StartCoroutine(GameFinishedPanelAnimation());
 
             // If time is over can not use extra life
             extraLifeUsed = true;
@@ -142,8 +144,7 @@ public class GameplayUI_Controller : MonoBehaviour
         }
         if (Gameplay_Controller.SharedInstance.lives == 0 || Gameplay_Controller.SharedInstance.lives < 0)
         {
-            Gameplay_Controller.SharedInstance.PauseGame();
-            GameFinishedPanel();
+            StartCoroutine(GameFinishedPanelAnimation());
 
             // Showing or not ExtraLife Button
             if (extraLifeUsed == false && Gameplay_Controller.SharedInstance.actualScore > 1000)
@@ -154,20 +155,26 @@ public class GameplayUI_Controller : MonoBehaviour
         }
     }
 
-    public void GameFinishedPanel()
+    private IEnumerator GameFinishedPanelAnimation()
     {
+        clickBlockerPanel.gameObject.SetActive(true);
+
         // Updating UI Text
         bestScoreText.text = "Best: " + GameData_Controller.SharedInstance.highScore;
         actualScoreText.text = "Actual: " + Gameplay_Controller.SharedInstance.actualScore;
         livesLeftText.text = "Left: " + Gameplay_Controller.SharedInstance.livesTemp;
 
-        // Panels
+        // Panels & Animations
+        gameFinishedPanelAnimator.ResetTrigger("NotActive");
         gameFinishedPanel.gameObject.SetActive(true);
         pausePanel.gameObject.SetActive(false);
-        gameFinishedPanelAnimator.SetTrigger("Active");
-        gameFinishedPanelAnimator.ResetTrigger("NotActive");
-        gamePanelUIAnimator.ResetTrigger("Active");
         gamePanelUIAnimator.SetTrigger("NotActive");
+        gamePanelUIAnimator.ResetTrigger("Active");
+
+        yield return new WaitForSecondsRealtime(animationTime);
+
+        Gameplay_Controller.SharedInstance.PauseGame();
+        clickBlockerPanel.gameObject.SetActive(false);
     }
 
     #endregion GameFinished
@@ -177,75 +184,107 @@ public class GameplayUI_Controller : MonoBehaviour
     public void PauseButtonClicked()
     {
         Sound_Controller.SharedInstance.PlayButtonSound();
-        Gameplay_Controller.SharedInstance.PauseGame();
+        StartCoroutine(PauseButtonClickedAnimation());
+    }
 
+    private IEnumerator PauseButtonClickedAnimation()
+    {
+        clickBlockerPanel.gameObject.SetActive(true);
+
+        // Panels & Animations
         pausePanelAnimator.ResetTrigger("NotActive");
-        pausePanel.gameObject.SetActive(true);
+        pausePanel.gameObject.SetActive(true);   // In Animation
         gameFinishedPanel.gameObject.SetActive(false);
         gamePanelUIAnimator.SetTrigger("NotActive");   // Out Animation
         gamePanelUIAnimator.ResetTrigger("Active");
+
+        yield return new WaitForSecondsRealtime(animationTime);   // Waiting Animation time
+
+        Gameplay_Controller.SharedInstance.PauseGame();
+        clickBlockerPanel.gameObject.SetActive(false);
     }
 
     public void ClosePauseButtonClicked()
     {
         Sound_Controller.SharedInstance.PlayDontBuyButtonSound();
-        StartCoroutine(CloseButtonClickedAnim());   // Waiting animation time
+        StartCoroutine(CloseButtonClickedAnimation());
     }
 
-    private IEnumerator CloseButtonClickedAnim()
+    private IEnumerator CloseButtonClickedAnimation()
     {
+        Gameplay_Controller.SharedInstance.ResumeGame();
+        clickBlockerPanel.gameObject.SetActive(true);
+
+        // Panels & Animations
         pausePanelAnimator.SetTrigger("NotActive");   // Out Animation
         gamePanelUIAnimator.SetTrigger("Active");   // In Animation
         gamePanelUIAnimator.ResetTrigger("NotActive");
 
-        yield return new WaitForSecondsRealtime(animationTime);
+        yield return new WaitForSecondsRealtime(animationTime);   // Waiting Animation time
 
+        // Deactivating non necessary objects, in order to avoid sorting and functional issues
         pausePanel.gameObject.SetActive(false);
-        Gameplay_Controller.SharedInstance.ResumeGame();
+
+        clickBlockerPanel.gameObject.SetActive(false);
     }
 
     public void RestartButtonClicked()
     {
         Sound_Controller.SharedInstance.PlayBuyButtonSound();
-        StartCoroutine(RestartButtonClickedAnim());
+        StartCoroutine(RestartButtonClickedAnimation());
     }
 
-    private IEnumerator RestartButtonClickedAnim()
+    private IEnumerator RestartButtonClickedAnimation()
     {
+        clickBlockerPanel.gameObject.SetActive(true);
+
+        // Panels & Animations
         pausePanelAnimator.SetTrigger("NotActive");   // Out Animation
         gamePanelUIAnimator.SetTrigger("Active");   // In Animation
         gamePanelUIAnimator.ResetTrigger("NotActive");
 
-        yield return new WaitForSecondsRealtime(animationTime);
+        yield return new WaitForSecondsRealtime(animationTime);   // Waiting Animation time
 
+        // Deactivating non necessary objects, in order to avoid sorting and functional issues
         gameFinishedPanel.gameObject.SetActive(false);
         pausePanel.gameObject.SetActive(false);
-        SetStartingTimer();
+
+        SetStartingTimer();   // Restarting Gameplay
         Gameplay_Controller.SharedInstance.ResumeGame();
         Gameplay_Controller.SharedInstance.InitialiseGameData();   // Resetting Gameplay Data
+
+        clickBlockerPanel.gameObject.SetActive(false);
     }
 
     public void ReplayButtonClicked()
     {
         Sound_Controller.SharedInstance.PlayBuyButtonSound();
-        StartCoroutine(ReplayButtonClickedAnim());
+        StartCoroutine(ReplayButtonClickedAnimation());
     }
 
-    private IEnumerator ReplayButtonClickedAnim()
+    private IEnumerator ReplayButtonClickedAnimation()
     {
+        clickBlockerPanel.gameObject.SetActive(true);
+
         Gameplay_Controller.SharedInstance.SaveGameData();   // Saving Game Data
+
+        // Panels & Animations
         gameFinishedPanelAnimator.SetTrigger("NotActive");   // Out Animation
         gameFinishedPanelAnimator.ResetTrigger("Active");
         gamePanelUIAnimator.SetTrigger("Active");   // In Animation
         gamePanelUIAnimator.ResetTrigger("NotActive");
 
-        yield return new WaitForSecondsRealtime(animationTime);
+        yield return new WaitForSecondsRealtime(animationTime);   // Waiting Animation time
 
+        // Deactivating non necessary objects, in order to avoid sorting and functional issues
         gameFinishedPanel.gameObject.SetActive(false);
         pausePanel.gameObject.SetActive(false);
-        SetStartingTimer();
+
+        SetStartingTimer();   // Restarting Gameplay
         Gameplay_Controller.SharedInstance.ResumeGame();
         Gameplay_Controller.SharedInstance.InitialiseGameData();   // Resetting Gameplay Data
+
+        clickBlockerPanel.gameObject.SetActive(false);
     }
 
     #region Extra Life Button
@@ -253,11 +292,12 @@ public class GameplayUI_Controller : MonoBehaviour
     public void ExtraLifeButtonClicked()
     {
         Sound_Controller.SharedInstance.PlayBuyButtonSound();
-        StartCoroutine(ExtraLifeButtonClickedOutAnim());
+        StartCoroutine(ExtraLifeButtonClickedOutAnimation());
     }
 
-    private IEnumerator ExtraLifeButtonClickedOutAnim()
+    private IEnumerator ExtraLifeButtonClickedOutAnimation()
     {
+        clickBlockerPanel.gameObject.SetActive(true);
         extraLifeUsed = true;   // Deactivating button
 
         // Subtracting currency
@@ -269,12 +309,13 @@ public class GameplayUI_Controller : MonoBehaviour
         gamePanelUIAnimator.ResetTrigger("NotActive");
         gamePanelUIAnimator.SetTrigger("Active");
 
-        yield return new WaitForSecondsRealtime(1.1f);
+        yield return new WaitForSecondsRealtime(animationTime);   // Waiting Animation time
 
-        
+        // Deactivating non necessary objects, in order to avoid sorting and functional issues
         gameFinishedPanel.gameObject.SetActive(false);
         pausePanel.gameObject.SetActive(false);
         extraLifeButton.gameObject.SetActive(false);
+        clickBlockerPanel.gameObject.SetActive(false);
     }
 
     #endregion Extra Life Button
@@ -284,17 +325,18 @@ public class GameplayUI_Controller : MonoBehaviour
     public void MainMenuButtonClicked()
     {
         Sound_Controller.SharedInstance.PlayDontBuyButtonSound();
-        StartCoroutine(ChangeSceneMainMenu());   // Waiting animation time
+        StartCoroutine(MainMenuButtonClickedAnimation());
     }
 
-    IEnumerator ChangeSceneMainMenu()
+    IEnumerator MainMenuButtonClickedAnimation()
     {
+        clickBlockerPanel.gameObject.SetActive(true);
         Gameplay_Controller.SharedInstance.SaveGameData();
         //SceneManager.UnloadSceneAsync(1);
         screenChangerPanel.SetTrigger("Active");
         gamePanelUIAnimator.SetTrigger("NotActive");
 
-        yield return new WaitForSecondsRealtime(1.1f);
+        yield return new WaitForSecondsRealtime(animationTime);   // Waiting Animation time
         SceneManager.LoadScene(0);
     }
 

@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
-using static UnityEngine.GraphicsBuffer;
 
 public class Particle_Spawner : MonoBehaviour
 {
@@ -20,6 +17,11 @@ public class Particle_Spawner : MonoBehaviour
     [SerializeField] private bool shouldExpand = true;
 
     #endregion Pooling Method
+
+    // Particle Effect Attributes
+    [SerializeField] private Material[] fruitMaterials;
+    [SerializeField] private Material skullMaterial;
+    [SerializeField] private string[] fruitTags;
 
     #endregion Variables
 
@@ -70,6 +72,29 @@ public class Particle_Spawner : MonoBehaviour
         {
             return null;
         }
+    }
+
+    public void SpawnParticleEffect(GameObject spawnerObject)
+    {
+        Sound_Controller.SharedInstance.PlayFruitSound();
+
+        GameObject gameObject = Particle_Spawner.SharedInstance.GetPooledObject();
+        if (gameObject != null)
+        {
+            if (spawnerObject.tag != "Skull")   // Fruit
+            {
+                for (int i = 0; i < fruitMaterials.Length; i++)
+                    if (spawnerObject.tag == fruitTags[i])
+                    {
+                        gameObject.GetComponent<Renderer>().material = fruitMaterials[i];
+                    }
+            }
+            else gameObject.GetComponent<Renderer>().material = skullMaterial;
+
+            gameObject.transform.position = spawnerObject.gameObject.transform.position;
+            gameObject.SetActive(true);
+        }
+        
     }
 
     #endregion Object Pooling Method

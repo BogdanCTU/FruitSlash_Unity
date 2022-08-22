@@ -37,7 +37,6 @@ public class GameData_Controller : MonoBehaviour
     {
         Singleton();
         InitializeGameVariables();
-        Shop_Controller.SharedInstancel.InitialiseShopUI();
     }
 
     public void Singleton()   // Singleton class, only one instance

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Gameplay_Controller : MonoBehaviour
 {
@@ -52,48 +51,83 @@ public class Gameplay_Controller : MonoBehaviour
 
     public void InitialiseGameData()
     {
-        if(gameMode == 0 || gameMode == 1 || gameMode == 2)
+        switch (gameMode)
         {
-            actualScore = 0;
-            lives = 3;
-            timeLeft = 60.0f;
-        }
-        else if(gameMode == 3)
-        {
-            actualScore = 0;
-            lives = 1;
-            timeLeft = 30.0f;
+            case 0:   // Easy
+                {
+                    actualScore = 0;
+                    lives = 5;
+                    timeLeft = 60.0f;
+                    break;
+                }
+            case 1:   // Medium
+                {
+                    actualScore = 0;
+                    lives = 3;
+                    timeLeft = 60.0f;
+                    break;
+                }
+            case 2:   // Hard
+                {
+                    actualScore = 0;
+                    lives = 3;
+                    timeLeft = 40.0f;
+                    break;
+                }
+            default:   // Explicit -> medium
+                {
+                    actualScore = 0;
+                    lives = 3;
+                    timeLeft = 60.0f;
+                    break;
+                }
         }
     }
 
     private void InitialiseGameMode()
     {
-        if (gameMode == 0)   // Easy
+        switch (gameMode)
         {
-            foodSpawners[0].SetActive(true);
-            foodSpawners[1].SetActive(true);
-            foodSpawners[2].SetActive(true);
-            foodSpawners[3].SetActive(false);
-            skullSpawners[0].SetActive(true);
-            skullSpawners[1].SetActive(false);
-        }
-        else if (gameMode == 1)   // Medium
-        {
-            foodSpawners[0].SetActive(true);
-            foodSpawners[1].SetActive(true);
-            foodSpawners[2].SetActive(true);
-            foodSpawners[3].SetActive(false);
-            skullSpawners[0].SetActive(true);
-            skullSpawners[1].SetActive(false);
-        }
-        else if (gameMode == 2)   // Hard
-        {
-            foodSpawners[0].SetActive(true);
-            foodSpawners[1].SetActive(true);
-            foodSpawners[2].SetActive(true);
-            foodSpawners[3].SetActive(true);
-            skullSpawners[0].SetActive(true);
-            skullSpawners[1].SetActive(true);
+            default:   // Explicit -> Medium
+                {
+                    foodSpawners[0].SetActive(true);
+                    foodSpawners[1].SetActive(true);
+                    foodSpawners[2].SetActive(true);
+                    foodSpawners[3].SetActive(false);
+                    skullSpawners[0].SetActive(true);
+                    skullSpawners[1].SetActive(false);
+                    break;
+                }
+            case 0:   // Easy
+                {
+                    foodSpawners[0].SetActive(true);
+                    foodSpawners[1].SetActive(true);
+                    foodSpawners[2].SetActive(true);
+                    foodSpawners[3].SetActive(false);
+                    skullSpawners[0].SetActive(true);
+                    skullSpawners[1].SetActive(false);
+                    break;
+                }
+            case 2:   // Medium
+                {
+                    foodSpawners[0].SetActive(true);
+                    foodSpawners[1].SetActive(true);
+                    foodSpawners[2].SetActive(true);
+                    foodSpawners[3].SetActive(false);
+                    skullSpawners[0].SetActive(true);
+                    skullSpawners[1].SetActive(false);
+                    break;
+                }
+            case 3:   // Hard
+                {
+                    foodSpawners[0].SetActive(true);
+                    foodSpawners[1].SetActive(true);
+                    foodSpawners[2].SetActive(true);
+                    foodSpawners[3].SetActive(true);
+                    skullSpawners[0].SetActive(true);
+                    skullSpawners[1].SetActive(true);
+                    break;
+                }
         }
     }
 
@@ -103,38 +137,63 @@ public class Gameplay_Controller : MonoBehaviour
 
     public void GetGameModeEnemy()   // Subtracting lives or time according to game difficulty
     {
-        if (gameMode == 0)   // Easy
+        switch (gameMode)
         {
-            timeLeft -= 4.0f;
-        }
-        else if (gameMode == 1)   // Medium
-        {
-            timeLeft -= 2.5f;
-            lives--;
-        }
-        else if (gameMode == 2)   // Hard
-        {
-            timeLeft -= 5.0f;
-            lives--;
+            case 0:   // Easy
+                {
+                    timeLeft -= 4.0f;
+                    lives--;
+                    break;
+                }
+            case 1:   // Medium
+                {
+                    timeLeft -= 2.5f;
+                    lives--;
+                    break;
+                }
+            case 2:   // Hard
+                {
+                    timeLeft -= 5.0f;
+                    lives--;
+                    break;
+                }
+            default:   // Explicit -> Medium
+                {
+                    timeLeft -= 2.5f;
+                    lives--;
+                    break;
+                }
         }
     }
 
     public void GetGameModeFood(int points, int bonusTime)
     {
-        if (gameMode == 0)   // Easy
+        switch (gameMode)
         {
-            actualScore += points;   // SetNewScore
-            timeLeft += bonusTime;   // SetNewTime
-        }
-        else if (gameMode == 1)   // Medium
-        {
-            actualScore += (points * 2);   // SetNewScore
-            timeLeft += (bonusTime / 2);   // SetNewTime
-        }
-        else if (gameMode == 2)   // Hard
-        {
-            actualScore += (points * 3);   // SetNewScore
-            timeLeft += (bonusTime / 4);   // SetNewTime
+            case 0:   // Easy
+                {
+                    actualScore += points;   // SetNewScore
+                    timeLeft += bonusTime;   // SetNewTime
+                    break;
+                }
+            case 1:   // Medium
+                {
+                    actualScore += (points * 2);   // SetNewScore
+                    timeLeft += (bonusTime / 2);   // SetNewTime
+                    break;
+                }
+            case 2:   // Hard
+                {
+                    actualScore += (points * 3);   // SetNewScore
+                    timeLeft += (bonusTime / 4);   // SetNewTime
+                    break;
+                }
+            default:   // Explicit -> Medium
+                {
+                    actualScore += (points * 2);   // SetNewScore
+                    timeLeft += (bonusTime / 2);   // SetNewTime
+                    break;
+                }
         }
     }
 

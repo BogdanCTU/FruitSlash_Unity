@@ -10,10 +10,7 @@ public class Enemy : MonoBehaviour
     private Rigidbody objectRigidbody;
 
     // Horizontal Forces
-    protected static float horizontalForce, horizontalForceMin = 2, horizontalForceMax = 5, verticalForceMin = 10, verticalForceMax = 15;
-
-    // ParticleEffect Colour
-    [SerializeField] private Material gameObjectMaterial;
+    [SerializeField] private float horizontalForce, horizontalForceMin = 2, horizontalForceMax = 5, verticalForceMin = 10, verticalForceMax = 15;
 
     #endregion
 
@@ -46,22 +43,22 @@ public class Enemy : MonoBehaviour
                 {
                     Gameplay_Controller.SharedInstance.GetGameModeEnemy();   // Subtracting lives or time according to game difficulty
                     this.gameObject.SetActive(false);   // Deactivate gameObject
-                    SpawnParticleEffect();
+                    Particle_Spawner.SharedInstance.SpawnParticleEffect(this.gameObject);
                     break;
                 }
             case "LeftEdge":
                 {
-                    objectRigidbody.AddForce(Vector3.right * horizontalForce / 2, ForceMode.Impulse);
+                    objectRigidbody.AddForce(Vector3.right * horizontalForce / 3, ForceMode.Impulse);
                     break;
                 }
             case "RightEdge":
                 {
-                    objectRigidbody.AddForce(Vector3.left * horizontalForce / 2, ForceMode.Impulse);
+                    objectRigidbody.AddForce(Vector3.left * horizontalForce / 3, ForceMode.Impulse);
                     break;
                 }
             case "TopEdge":
                 {
-                    objectRigidbody.AddForce(Vector3.down * verticalForceMax / 2, ForceMode.Impulse);
+                    objectRigidbody.AddForce(Vector3.down * verticalForceMax / 3, ForceMode.Impulse);
                     break;
                 }
         }
@@ -101,18 +98,6 @@ public class Enemy : MonoBehaviour
     }
 
     #endregion Object Movement and Position
-
-    private void SpawnParticleEffect()
-    {
-        Sound_Controller.SharedInstance.PlayEnemySound();
-        GameObject gameObject = Particle_Spawner.SharedInstance.GetPooledObject();
-        if (gameObject != null)
-        {
-            gameObject.GetComponent<Renderer>().material = gameObjectMaterial;
-            gameObject.transform.position = this.gameObject.transform.position;
-            gameObject.SetActive(true);
-        }
-    }
 
     #endregion Methods
 }

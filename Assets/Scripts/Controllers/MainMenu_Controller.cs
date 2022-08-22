@@ -15,23 +15,18 @@ public class MainMenu_Controller : MonoBehaviour
     // UI
     [SerializeField] private Text coinText, diamondText;
 
-    // Difficulty Panel
-    private bool difficultyPanelHidden = true;
-
     // Buttons
     [SerializeField] private Button playButton, easyButton, mediumButton, hardButton, shopButton, closeShopButton;
     [SerializeField] private Animator shopButtonAnimator;
 
     // Backgrounds
     [SerializeField] private GameObject[] backgrounds;
+    [SerializeField] private GameObject clickBlockerPanel;
 
-    // Panels + Animators
+    // Panels & Animators
     [SerializeField] private GameObject difficultyPanel, shopPanel, buyBackgroundPanel, buyTrailPanel;
     [SerializeField] private Animator playButtonAnimator, difficultyPanelAnimator, shopPanelAnimator, buyBackgroundPanelAnimator, buyTrailPanelAnimator;
     [SerializeField] private const float animationTime = 1.1f;
-
-    // Backgrounds
-    [SerializeField] private GameObject clickBlockerPanel;
 
     #endregion Pannels
 
@@ -43,7 +38,6 @@ public class MainMenu_Controller : MonoBehaviour
     {
         if (SharedInstance == null) SharedInstance = this;
         UpdateUI();
-        Shop_Controller.SharedInstancel.InitialiseShopUI();
     }
 
     public void UpdateUI()
@@ -113,7 +107,7 @@ public class MainMenu_Controller : MonoBehaviour
 
     public void ShopButtonClicked()
     {
-
+        Shop_Controller.SharedInstance.InitialiseShopUI();
         Sound_Controller.SharedInstance.PlayButtonSound();
         StartCoroutine(ShopButtonClickedAnimation());
     }
@@ -190,16 +184,12 @@ public class MainMenu_Controller : MonoBehaviour
 
     #endregion Buttons
 
-    #region Screen Changer
-
     IEnumerator ScreenChangerTime()
     {
         yield return new WaitForSecondsRealtime(1.6f);
         SceneManager.UnloadSceneAsync(0);
         SceneManager.LoadScene(1);
     }
-
-    #endregion Screen Changer
 
     #endregion Methods
 }

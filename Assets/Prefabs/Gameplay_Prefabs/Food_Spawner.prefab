@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5818104263269290044
 Transform:
   m_ObjectHideFlags: 0
@@ -24,9 +24,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5818104263269290045}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.0003415, y: 1.0003415, z: 1.0003415}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -47,13 +47,13 @@ MonoBehaviour:
   pooledObjects: []
   itemsToPool:
   - amountToPool: 2
-    objectToPool: {fileID: 5817859361576445215, guid: 9cc97627ed18b449695d703ab651f5cd, type: 3}
+    objectToPool: {fileID: 5817859361576445215, guid: 09708a5d7e4625b4897781b9b8478eee, type: 3}
     shouldExpand: 0
   - amountToPool: 2
-    objectToPool: {fileID: 1996815852551487035, guid: 11bccc60726374a918b5c73120d47ab3, type: 3}
+    objectToPool: {fileID: 1996815852551487035, guid: 5f2c8a93171d2704e9b4a7c5ce153b2a, type: 3}
     shouldExpand: 0
   - amountToPool: 2
-    objectToPool: {fileID: 5626452297013284046, guid: c5bbabce5ea79419488492993bfdadf0, type: 3}
+    objectToPool: {fileID: 5626452297013284046, guid: fb7dec334d08fcc43a7c915b55916d95, type: 3}
     shouldExpand: 0
   nextObjectTimerMin: 2
   nextObjectTimerMax: 3
