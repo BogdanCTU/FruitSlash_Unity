@@ -30,6 +30,9 @@ public class Shop_Controller : MonoBehaviour
 
     [SerializeField] private const float animationTime = 1.1f;
 
+    // Click Blocker
+    [SerializeField] private GameObject clickBlockerPanel;
+
     #endregion Variables
 
     #region Methods
@@ -120,9 +123,11 @@ public class Shop_Controller : MonoBehaviour
 
     private IEnumerator CloseBuyBackgroundPanelAnimation()
     {
+        clickBlockerPanel.gameObject.SetActive(true);
         buyBackgroundPanelAnimator.SetTrigger("NotActive");
         yield return new WaitForSecondsRealtime(animationTime);
         buyBackgroundPanel.gameObject.SetActive(false);
+        clickBlockerPanel.gameObject.SetActive(false);
     }
 
     #endregion Backgrounds
@@ -181,9 +186,11 @@ public class Shop_Controller : MonoBehaviour
 
     private IEnumerator CloseBuyTrailPanelAnimation()
     {
+        clickBlockerPanel.gameObject.SetActive(true);
         buyTrailPanelAnimator.SetTrigger("NotActive");
         yield return new WaitForSecondsRealtime(animationTime);
         buyTrailPanel.gameObject.SetActive(false);
+        clickBlockerPanel.gameObject.SetActive(false);
     }
 
     #endregion Trails

@@ -20,6 +20,7 @@ public class MainMenu_Controller : MonoBehaviour
 
     // Buttons
     [SerializeField] private Button playButton, easyButton, mediumButton, hardButton, shopButton, closeShopButton;
+    [SerializeField] private Animator shopButtonAnimator;
 
     // Backgrounds
     [SerializeField] private GameObject[] backgrounds;
@@ -27,7 +28,10 @@ public class MainMenu_Controller : MonoBehaviour
     // Panels + Animators
     [SerializeField] private GameObject difficultyPanel, shopPanel, buyBackgroundPanel, buyTrailPanel;
     [SerializeField] private Animator playButtonAnimator, difficultyPanelAnimator, shopPanelAnimator, buyBackgroundPanelAnimator, buyTrailPanelAnimator;
-    [SerializeField] private const float animationTime = 1.1f; 
+    [SerializeField] private const float animationTime = 1.1f;
+
+    // Backgrounds
+    [SerializeField] private GameObject clickBlockerPanel;
 
     #endregion Pannels
 
@@ -67,16 +71,20 @@ public class MainMenu_Controller : MonoBehaviour
 
     private IEnumerator PlayButtonClickedAnimation()
     {
+        clickBlockerPanel.gameObject.SetActive(true);
+        // Animations
         difficultyPanelAnimator.ResetTrigger("NotActive");
-        playButtonAnimator.SetTrigger("NotActive");   // Out Animation
+        playButtonAnimator.SetTrigger("NotActive");
         difficultyPanel.gameObject.SetActive(true);
 
         yield return new WaitForSecondsRealtime(animationTime);
 
+        // Deactivating non necessary objects, in order to avoid sorting and functional issues
         playButton.gameObject.SetActive(false);
         shopPanel.gameObject.SetActive(false);
         buyBackgroundPanel.gameObject.SetActive(false);
         buyTrailPanel.gameObject.SetActive(false);
+        clickBlockerPanel.gameObject.SetActive(false);
     }
 
     public void CloseDifficultyPanelButtonClicked()
@@ -87,36 +95,47 @@ public class MainMenu_Controller : MonoBehaviour
 
     private IEnumerator CloseDifficultyPanelButtonClickedAnimation()
     {
+        clickBlockerPanel.gameObject.SetActive(true);
+        // Animations
         playButtonAnimator.ResetTrigger("NotActive");   
         playButton.gameObject.SetActive(true);
-        difficultyPanelAnimator.SetTrigger("NotActive");   // Out Animation
+        difficultyPanelAnimator.SetTrigger("NotActive");
 
         yield return new WaitForSecondsRealtime(animationTime);
 
+        // Deactivating non necessary objects, in order to avoid sorting and functional issues
         difficultyPanel.gameObject.SetActive(false);
         shopPanel.gameObject.SetActive(false);
         buyBackgroundPanel.gameObject.SetActive(false);
         buyTrailPanel.gameObject.SetActive(false);
+        clickBlockerPanel.gameObject.SetActive(false);
     }
 
     public void ShopButtonClicked()
     {
+
         Sound_Controller.SharedInstance.PlayButtonSound();
         StartCoroutine(ShopButtonClickedAnimation());
     }
 
     private IEnumerator ShopButtonClickedAnimation()
     {
+        clickBlockerPanel.gameObject.SetActive(true);
+        // Animations
+        shopButtonAnimator.SetTrigger("NotActive");
         shopPanelAnimator.ResetTrigger("NotActive");
         difficultyPanelAnimator.SetTrigger("NotActive");
         shopPanel.gameObject.SetActive(true);
-
+        
         yield return new WaitForSecondsRealtime(animationTime);
 
+        // Deactivating non necessary objects, in order to avoid sorting and functional issues
+        shopButton.gameObject.SetActive(false);
         difficultyPanel.gameObject.SetActive(false);
         playButton.gameObject.SetActive(false);
         buyBackgroundPanel.gameObject.SetActive(false);
         buyTrailPanel.gameObject.SetActive(false);
+        clickBlockerPanel.gameObject.SetActive(false);
     }
 
     public void CloseShopButtonClicked()
@@ -127,20 +146,27 @@ public class MainMenu_Controller : MonoBehaviour
 
     private IEnumerator CloseShopButtonClickedAnimation()
     {
+        clickBlockerPanel.gameObject.SetActive(true);
+        // Animations
         shopPanelAnimator.SetTrigger("NotActive");
         playButtonAnimator.ResetTrigger("NotActive");
         playButton.gameObject.SetActive(true);
+        shopButtonAnimator.ResetTrigger("NotActive");
+        shopButton.gameObject.SetActive(true);
 
         yield return new WaitForSecondsRealtime(animationTime);
 
+        // Deactivating non necessary objects, in order to avoid sorting and functional issues
         shopPanel.gameObject.SetActive(false);
         difficultyPanel.gameObject.SetActive(false);
         buyBackgroundPanel.gameObject.SetActive(false);
         buyTrailPanel.gameObject.SetActive(false);
+        clickBlockerPanel.gameObject.SetActive(false);
     }
 
     public void EasyButtonClicked()
     {
+        clickBlockerPanel.gameObject.SetActive(true);
         Sound_Controller.SharedInstance.PlayButtonSound();
         GameData_Controller.SharedInstance.nextGameMode = 0;
         StartCoroutine(ScreenChangerTime());
@@ -148,6 +174,7 @@ public class MainMenu_Controller : MonoBehaviour
 
     public void MediumButtonClicked()
     {
+        clickBlockerPanel.gameObject.SetActive(true);
         Sound_Controller.SharedInstance.PlayButtonSound();
         GameData_Controller.SharedInstance.nextGameMode = 1;
         StartCoroutine(ScreenChangerTime());
@@ -155,6 +182,7 @@ public class MainMenu_Controller : MonoBehaviour
 
     public void HardButtonClicked()
     {
+        clickBlockerPanel.gameObject.SetActive(true);
         Sound_Controller.SharedInstance.PlayButtonSound();
         GameData_Controller.SharedInstance.nextGameMode = 2;
         StartCoroutine(ScreenChangerTime());
