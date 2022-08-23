@@ -15,7 +15,7 @@ public class GameData_Controller : MonoBehaviour
     public bool isGameStartedFirstTime;
 
     // Currency
-    public int highScore = 0, coins = 0, diamonds = 0;
+    public int highScore = 0, coins = 0;
     private GameData gameData;
 
     // Backgrounds
@@ -70,7 +70,6 @@ public class GameData_Controller : MonoBehaviour
             {
                 gameData.SetHighScore(highScore);
                 gameData.SetCoins(coins);
-                gameData.SetDiamonds(diamonds);
                 gameData.SetActiveBackground(activeBackground);
                 gameData.SetUnlockedBackgrounds(backgroundsUnlocked);
                 gameData.SetActiveTrail(activeTrail);
@@ -123,7 +122,6 @@ public class GameData_Controller : MonoBehaviour
             // Initialising variables
             highScore = 0;
             coins = 0;
-            diamonds = 0;
 
             activeBackground = 0;   // Default Background
             backgroundsUnlocked = new bool[4];
@@ -147,7 +145,6 @@ public class GameData_Controller : MonoBehaviour
             gameData = new GameData();
             gameData.SetHighScore(highScore);
             gameData.SetCoins(coins);
-            gameData.SetDiamonds(diamonds);
             gameData.SetActiveBackground(activeBackground);
             gameData.SetUnlockedBackgrounds(backgroundsUnlocked);
             gameData.SetActiveTrail(activeTrail);
@@ -161,7 +158,6 @@ public class GameData_Controller : MonoBehaviour
         {
             highScore = gameData.GetHighScore();
             coins = gameData.GetCoins();
-            diamonds = gameData.GetDiamonds();
             activeBackground = gameData.GetActiveBackground();
             backgroundsUnlocked = gameData.GetUnlockedBackgrounds();
             activeTrail = gameData.GetActiveTrail();
@@ -182,7 +178,7 @@ class GameData
     private bool isGameStartedFirstTime;
 
     // Currency
-    private int highScore, coins, diamonds;
+    private int highScore, coins;
 
     // Backgrounds
     public int activeBackground;
@@ -207,9 +203,6 @@ class GameData
 
     public void SetCoins(int coins) { this.coins = coins; }
     public int GetCoins() { return this.coins; }
-
-    public void SetDiamonds(int diamonds) { this.diamonds = diamonds; }
-    public int GetDiamonds() { return this.diamonds; }
 
     public void SetActiveBackground(int background) { this.activeBackground = background; }
     public int GetActiveBackground() { return this.activeBackground; }

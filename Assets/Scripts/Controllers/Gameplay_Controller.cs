@@ -172,33 +172,32 @@ public class Gameplay_Controller : MonoBehaviour
         {
             case 0:   // Easy
                 {
-                    actualScore += points;   // SetNewScore
-                    timeLeft += bonusTime;   // SetNewTime
+                    actualScore += points;   // Set new score
+                    if (timeLeft < 59.0) timeLeft += bonusTime;   // Set new time
                     break;
                 }
             case 1:   // Medium
                 {
-                    actualScore += (points * 2);   // SetNewScore
-                    timeLeft += (bonusTime / 2);   // SetNewTime
+                    actualScore += (points * 2);   // Set new score
+                    if (timeLeft < 59.0) timeLeft += (bonusTime / 2);   // Set new time
                     break;
                 }
             case 2:   // Hard
                 {
-                    actualScore += (points * 3);   // SetNewScore
-                    timeLeft += (bonusTime / 4);   // SetNewTime
+                    actualScore += (points * 3);   // Set new score
+                    if (timeLeft < 59.0) timeLeft += (bonusTime / 4);   // Set new time
                     break;
                 }
             default:   // Explicit -> Medium
                 {
-                    actualScore += (points * 2);   // SetNewScore
-                    timeLeft += (bonusTime / 2);   // SetNewTime
+                    actualScore += (points * 2);   // Set new score
+                    if (timeLeft < 59.0) timeLeft += (bonusTime / 2);   // Set new time
                     break;
                 }
         }
     }
 
     #endregion GameMode
-
 
     #region Pausing Game
 
@@ -242,37 +241,11 @@ public class Gameplay_Controller : MonoBehaviour
     {
         if (actualScore > GameData_Controller.SharedInstance.highScore) GameData_Controller.SharedInstance.highScore = actualScore;   // Setting High Score
         GameData_Controller.SharedInstance.coins += actualScore;
-        GameData_Controller.SharedInstance.diamonds += livesTemp;
         GameData_Controller.SharedInstance.Save();
     }
 
     #endregion Pausing Game
 
-    #region Getters/Setters
-
-    // Score
-    public void SetActualScore(int score) { this.actualScore = score; }
-    public void AddScore(int score) { this.actualScore += score; }
-    public int GetActualScore() { return this.actualScore; }
-
-    // Time
-    public void SetTimeLeft(float time) { this.timeLeft = time; }
-    public void AddTime(float time) { this.timeLeft += time; }
-    public void SubtractTime(float time) { this.timeLeft -= time; }
-    public float GetTimeLeft() { return this.timeLeft; }
-
-    // Lives
-    public void SetLivesLeft(int newLives) { this.lives = newLives; }
-    public void AddLife() { this.lives += 1; }
-    public void SubtractLife() { this.lives -= 1; }
-    public float GetLivesLeft() { return this.lives; }
-
-    // Game Mode
-    public void SetGameMode(int newGameMode) { this.gameMode = newGameMode; }
-    public int GetGameMode() { return this.gameMode; }
-
-    #endregion Getters/Setters
-
-    #endregion
+    #endregion Methods
 }
    // EOF - End Of File

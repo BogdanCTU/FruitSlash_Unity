@@ -26,6 +26,7 @@ public class GameplayUI_Controller : MonoBehaviour
     [SerializeField] private Text bestScoreText, actualScoreText, livesLeftText;
     [SerializeField] private Animator gameFinishedPanelAnimator;
     [SerializeField] private GameObject gameFinishedPanel;
+
     // Extra Life
     [SerializeField] private Button extraLifeButton;
     private bool extraLifeUsed = false;
@@ -35,19 +36,18 @@ public class GameplayUI_Controller : MonoBehaviour
     [SerializeField] private GameObject startingTimerPanel;
     public float startigTime = 3.9f;
 
-    // Backgrounds Elements
+    // Backgrounds & Trails Elements
     [SerializeField] private GameObject[] backgrounds;
-    // Trails Elements
     [SerializeField] private GameObject[] trails;
 
     // Screen Changer
     [SerializeField] private Animator screenChangerPanel;
 
-    // Animation Time
-    [SerializeField] private const float animationTime = 1.1f;
-
     // Spam Click Blocker
     [SerializeField] private GameObject clickBlockerPanel;
+
+    // Animation Time
+    [SerializeField] private const float animationTime = 1.1f;
 
     #endregion UI_Elements
 
@@ -166,10 +166,10 @@ public class GameplayUI_Controller : MonoBehaviour
 
         // Panels & Animations
         gameFinishedPanelAnimator.ResetTrigger("NotActive");
-        gameFinishedPanel.gameObject.SetActive(true);
-        pausePanel.gameObject.SetActive(false);
+        gameFinishedPanel.gameObject.SetActive(true);   // Activate + Animation
         gamePanelUIAnimator.SetTrigger("NotActive");
         gamePanelUIAnimator.ResetTrigger("Active");
+        pausePanel.gameObject.SetActive(false);
 
         yield return new WaitForSecondsRealtime(animationTime);
 
@@ -238,20 +238,19 @@ public class GameplayUI_Controller : MonoBehaviour
     {
         clickBlockerPanel.gameObject.SetActive(true);
 
-        // Panels & Animations
         pausePanelAnimator.SetTrigger("NotActive");   // Out Animation
-        gamePanelUIAnimator.SetTrigger("Active");   // In Animation
-        gamePanelUIAnimator.ResetTrigger("NotActive");
 
         yield return new WaitForSecondsRealtime(animationTime);   // Waiting Animation time
+
+        gamePanelUIAnimator.SetTrigger("Active");   // In Animation
+        gamePanelUIAnimator.ResetTrigger("NotActive");
+        SetStartingTimer();   // Restarting Gameplay
+        Gameplay_Controller.SharedInstance.ResumeGame();
+        Gameplay_Controller.SharedInstance.InitialiseGameData();   // Resetting Gameplay Data
 
         // Deactivating non necessary objects, in order to avoid sorting and functional issues
         gameFinishedPanel.gameObject.SetActive(false);
         pausePanel.gameObject.SetActive(false);
-
-        SetStartingTimer();   // Restarting Gameplay
-        Gameplay_Controller.SharedInstance.ResumeGame();
-        Gameplay_Controller.SharedInstance.InitialiseGameData();   // Resetting Gameplay Data
 
         clickBlockerPanel.gameObject.SetActive(false);
     }
@@ -268,21 +267,21 @@ public class GameplayUI_Controller : MonoBehaviour
 
         Gameplay_Controller.SharedInstance.SaveGameData();   // Saving Game Data
 
-        // Panels & Animations
         gameFinishedPanelAnimator.SetTrigger("NotActive");   // Out Animation
         gameFinishedPanelAnimator.ResetTrigger("Active");
-        gamePanelUIAnimator.SetTrigger("Active");   // In Animation
-        gamePanelUIAnimator.ResetTrigger("NotActive");
 
         yield return new WaitForSecondsRealtime(animationTime);   // Waiting Animation time
 
-        // Deactivating non necessary objects, in order to avoid sorting and functional issues
-        gameFinishedPanel.gameObject.SetActive(false);
-        pausePanel.gameObject.SetActive(false);
+        gamePanelUIAnimator.SetTrigger("Active");   // In Animation
+        gamePanelUIAnimator.ResetTrigger("NotActive");
 
         SetStartingTimer();   // Restarting Gameplay
         Gameplay_Controller.SharedInstance.ResumeGame();
         Gameplay_Controller.SharedInstance.InitialiseGameData();   // Resetting Gameplay Data
+
+        // Deactivating non necessary objects, in order to avoid sorting and functional issues
+        gameFinishedPanel.gameObject.SetActive(false);
+        pausePanel.gameObject.SetActive(false);
 
         clickBlockerPanel.gameObject.SetActive(false);
     }
