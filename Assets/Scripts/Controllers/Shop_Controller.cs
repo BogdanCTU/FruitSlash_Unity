@@ -82,7 +82,7 @@ public class Shop_Controller : MonoBehaviour
         {
             selectedBackground = buttonIndex;
             int tempPrice = backgroundPrices[selectedBackground - 1];
-            if (GameData_Controller.SharedInstance.coins > tempPrice) OpenBuyBackgroundPanel(tempPrice);
+            if (GameData_Controller.SharedInstance.coins >= tempPrice) OpenBuyBackgroundPanel(tempPrice);
         }
     }
 
@@ -145,7 +145,7 @@ public class Shop_Controller : MonoBehaviour
         {
             selectedTrail = buttonIndex;
             int tempPrice = trailPrices[selectedTrail - 1];
-            if (GameData_Controller.SharedInstance.coins > tempPrice) OpenBuyTrailPanel(tempPrice);
+            if (GameData_Controller.SharedInstance.coins >= tempPrice) OpenBuyTrailPanel(tempPrice);
         }
     }
 

@@ -1,16 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-[System.Serializable]   // Allows to make instances of this class editable from within the Inspector.
-public class Food_Spawner : MonoBehaviour
+public class UI_WorldCanvas_Spawner : MonoBehaviour
 {
     #region Variables
 
     #region PoolingMethod
 
     // Shared Instance
-    public static Food_Spawner SharedInstance;
+    public static UI_WorldCanvas_Spawner SharedInstance;
 
     // Pooling List
     [SerializeField] private List<GameObject> pooledObjects;
@@ -19,13 +18,6 @@ public class Food_Spawner : MonoBehaviour
     [SerializeField] private List<ObjectPoolItem> itemsToPool;
 
     #endregion
-
-    // Fruits
-    [SerializeField] private int fruitsNumber;
-
-    // Timers
-    [SerializeField] private float nextObjectTimerMin = 2.0f, nextObjectTimerMax = 3.0f;
-    private float nextObjectTimer;
 
     #endregion Variables
 
@@ -37,15 +29,7 @@ public class Food_Spawner : MonoBehaviour
     {
         if (SharedInstance == null) SharedInstance = this;
 
-        nextObjectTimer = Random.Range(nextObjectTimerMin, nextObjectTimerMax);   // Setting First Timer
-
         SetObjectsToPull();
-        StartCoroutine(SpawnObject());
-    }
-
-    private void OnEnable()
-    {
-        StartCoroutine(SpawnObject());
     }
 
     #endregion Unity Methods
@@ -89,43 +73,51 @@ public class Food_Spawner : MonoBehaviour
         }
         return null;
     }
-    #endregion
 
-    protected IEnumerator SpawnObject()
+    #endregion Object Pooling Methods
+
+    public void SpawnLifeObject(Vector3 parentPosition)
     {
-        string objectTag = RandomFoodType();    // objectTag  {Fruit1 - Apple, Fruit2 - Coconut, Fruit3 - Lemon, Fruit4 - Orange, Fruit5 - Pear}
-
-        GameObject objectToSpawn = GetPooledObject(objectTag);
+        GameObject objectToSpawn = GetPooledObject("LifeCanvas");
         if (objectToSpawn != null)
         {
+            objectToSpawn.gameObject.transform.position = parentPosition;
             objectToSpawn.SetActive(true);
         }
-
-        // Code will be executer before starting timer
-        yield return new WaitForSecondsRealtime(nextObjectTimer);
-        // Code will be executed after time is over
-
-        nextObjectTimer = Random.Range(nextObjectTimerMin, nextObjectTimerMax);
-        StartCoroutine(SpawnObject());
     }
 
-    private string RandomFoodType()
+    public void SpawnCoinObject(Vector3 parentPosition, int parentPoints)
     {
-        // Randomise FoodType to spawn
-        int objectType = Random.Range(1, fruitsNumber + 1);   // The max value is excluded
-        string fruitName = "Fruit" + objectType;
-        return fruitName;
+        int multiplier = Gameplay_Controller.SharedInstance.GetGameMode() + 1;   // Setting multiplier based on Game Difficutly
+
+        GameObject objectToSpawn = GetPooledObject("CoinCanvas");
+        if (objectToSpawn != null)
+        {
+            // Setting WorldCanvas Text based on FruitType
+            Text canvasText = objectToSpawn.GetComponentInChildren(typeof(Text)) as Text;
+            canvasText.text = "+" + (parentPoints * multiplier);
+            objectToSpawn.gameObject.transform.position = new Vector3(parentPosition.x, parentPosition.y, parentPosition.z - 1);
+            objectToSpawn.SetActive(true);
+        }
+    }
+
+    public void SpawnComboObject(Vector3 parentPosition, int combo)
+    {
+        if (combo >= 2)
+        {
+            Gameplay_Controller.SharedInstance.actualScore += combo;   // Adding COMBO bonus points
+            GameObject objectToSpawn = GetPooledObject("ComboCanvas");
+            Text canvasText = objectToSpawn.GetComponentInChildren(typeof(Text)) as Text;
+            if (objectToSpawn != null)
+            {
+                canvasText.text = "COMBO X" + combo;
+                objectToSpawn.gameObject.transform.position = new Vector3(parentPosition.x, parentPosition.y, parentPosition.z - 1);
+                objectToSpawn.SetActive(true);
+            }
+        }
     }
 
     #endregion Methods
-}
-
-[System.Serializable]
-public class ObjectPoolItem
-{
-    public int amountToPool;
-    public GameObject objectToPool;
-    public bool shouldExpand;
 }
 
 // EOF - End Of File

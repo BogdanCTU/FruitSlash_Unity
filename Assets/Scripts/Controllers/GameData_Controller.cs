@@ -121,7 +121,7 @@ public class GameData_Controller : MonoBehaviour
         {
             // Initialising variables
             highScore = 0;
-            coins = 0;
+            coins = 2000;
 
             activeBackground = 0;   // Default Background
             backgroundsUnlocked = new bool[4];
@@ -132,7 +132,7 @@ public class GameData_Controller : MonoBehaviour
             }
 
             activeTrail = 0;   // Default Trail
-            trailsUnlocked = new bool[4];
+            trailsUnlocked = new bool[6];
             trailsUnlocked[0] = true;   // Default Trail
             for (int i = 1; i < trailsUnlocked.Length; i++)
             {

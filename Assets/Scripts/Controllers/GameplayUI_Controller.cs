@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEngine.ParticleSystem;
 
 public class GameplayUI_Controller : MonoBehaviour
 {
@@ -102,8 +103,9 @@ public class GameplayUI_Controller : MonoBehaviour
 
         // Time Left
         Gameplay_Controller.SharedInstance.timeLeft = Gameplay_Controller.SharedInstance.timeLeft - (Time.deltaTime / 2);
-        if (Gameplay_Controller.SharedInstance.timeLeft >= 10) timerText.text = "00:" + (int)Gameplay_Controller.SharedInstance.timeLeft;
+        if (Gameplay_Controller.SharedInstance.timeLeft >= 10 && Gameplay_Controller.SharedInstance.timeLeft < 60) timerText.text = "00:" + (int)Gameplay_Controller.SharedInstance.timeLeft;
         else if (Gameplay_Controller.SharedInstance.timeLeft < 10) timerText.text = "00:0" + (int)Gameplay_Controller.SharedInstance.timeLeft;
+        else if (Gameplay_Controller.SharedInstance.timeLeft >= 60) timerText.text = "01:00";
     }
 
     #endregion UI
@@ -115,6 +117,7 @@ public class GameplayUI_Controller : MonoBehaviour
         startingTimerText.text = "" + (int)startigTime;
         startigTime = 3.9f;
         startingTimerPanel.gameObject.SetActive(true);
+        Gameplay_Controller.SharedInstance.gamePaused = true;
     }
 
     public void RunStartingTimer()
@@ -124,6 +127,7 @@ public class GameplayUI_Controller : MonoBehaviour
         if (startigTime == 0 || startigTime < 0)
         {
             startingTimerPanel.gameObject.SetActive(false);
+            Gameplay_Controller.SharedInstance.gamePaused = false;
             trails[GameData_Controller.SharedInstance.activeTrail].gameObject.SetActive(true);
         }
     }
@@ -144,25 +148,24 @@ public class GameplayUI_Controller : MonoBehaviour
         }
         if (Gameplay_Controller.SharedInstance.lives == 0 || Gameplay_Controller.SharedInstance.lives < 0)
         {
+            Gameplay_Controller.SharedInstance.lives = Gameplay_Controller.SharedInstance.lives < 0 ? 0 : Gameplay_Controller.SharedInstance.lives;
             StartCoroutine(GameFinishedPanelAnimation());
 
             // Showing or not ExtraLife Button
-            if (extraLifeUsed == false && Gameplay_Controller.SharedInstance.actualScore > 1000)
-            {
-                extraLifeButton.gameObject.SetActive(true);
-                extraLifeUsed = true;
-            }
+            if (extraLifeUsed == false && Gameplay_Controller.SharedInstance.actualScore > 250) extraLifeButton.gameObject.SetActive(true);
         }
     }
 
     private IEnumerator GameFinishedPanelAnimation()
     {
+        Gameplay_Controller.SharedInstance.gamePaused = true;
         clickBlockerPanel.gameObject.SetActive(true);
 
         // Updating UI Text
-        bestScoreText.text = "Best: " + GameData_Controller.SharedInstance.highScore;
+        bestScoreText.text = Gameplay_Controller.SharedInstance.actualScore < GameData_Controller.SharedInstance.highScore ? "Best: " + GameData_Controller.SharedInstance.highScore : "Best: " + Gameplay_Controller.SharedInstance.actualScore;
         actualScoreText.text = "Actual: " + Gameplay_Controller.SharedInstance.actualScore;
-        livesLeftText.text = "Left: " + Gameplay_Controller.SharedInstance.livesTemp;
+        livesLeftText.text = "Left: " + Gameplay_Controller.SharedInstance.lives;
+        Gameplay_Controller.SharedInstance.PauseGame();
 
         // Panels & Animations
         gameFinishedPanelAnimator.ResetTrigger("NotActive");
@@ -173,7 +176,6 @@ public class GameplayUI_Controller : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(animationTime);
 
-        Gameplay_Controller.SharedInstance.PauseGame();
         clickBlockerPanel.gameObject.SetActive(false);
     }
 
@@ -189,6 +191,7 @@ public class GameplayUI_Controller : MonoBehaviour
 
     private IEnumerator PauseButtonClickedAnimation()
     {
+        Gameplay_Controller.SharedInstance.gamePaused = true;
         clickBlockerPanel.gameObject.SetActive(true);
 
         // Panels & Animations
@@ -244,9 +247,10 @@ public class GameplayUI_Controller : MonoBehaviour
 
         gamePanelUIAnimator.SetTrigger("Active");   // In Animation
         gamePanelUIAnimator.ResetTrigger("NotActive");
-        SetStartingTimer();   // Restarting Gameplay
         Gameplay_Controller.SharedInstance.ResumeGame();
+        SetStartingTimer();   // Restarting Gameplay
         Gameplay_Controller.SharedInstance.InitialiseGameData();   // Resetting Gameplay Data
+        extraLifeUsed = false;
 
         // Deactivating non necessary objects, in order to avoid sorting and functional issues
         gameFinishedPanel.gameObject.SetActive(false);
@@ -275,9 +279,10 @@ public class GameplayUI_Controller : MonoBehaviour
         gamePanelUIAnimator.SetTrigger("Active");   // In Animation
         gamePanelUIAnimator.ResetTrigger("NotActive");
 
-        SetStartingTimer();   // Restarting Gameplay
         Gameplay_Controller.SharedInstance.ResumeGame();
+        SetStartingTimer();   // Restarting Gameplay
         Gameplay_Controller.SharedInstance.InitialiseGameData();   // Resetting Gameplay Data
+        extraLifeUsed = false;
 
         // Deactivating non necessary objects, in order to avoid sorting and functional issues
         gameFinishedPanel.gameObject.SetActive(false);
@@ -300,7 +305,7 @@ public class GameplayUI_Controller : MonoBehaviour
         extraLifeUsed = true;   // Deactivating button
 
         // Subtracting currency
-        Gameplay_Controller.SharedInstance.actualScore -= 1000;
+        Gameplay_Controller.SharedInstance.actualScore -= 250;
         Gameplay_Controller.SharedInstance.ResumeGameExtra();
 
         gameFinishedPanelAnimator.SetTrigger("NotActive");   // Out Animation

@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3285371291036567657
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3285371291036567959}
+  - component: {fileID: 3285371291036567958}
+  m_Layer: 0
+  m_Name: UIWorldCanvas_Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3285371291036567959
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3285371291036567657}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.3051531, y: 1.3007387, z: -11.718055}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3285371291036567958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3285371291036567657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 653de7bb7c02d6a46a15262a2b17465a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pooledObjects: []
+  itemsToPool:
+  - amountToPool: 6
+    objectToPool: {fileID: 2585402574554559112, guid: d7880934ea212804eb3cc87a28f03753, type: 3}
+    shouldExpand: 0
+  - amountToPool: 3
+    objectToPool: {fileID: 862589108220911282, guid: 7147d769c6eac2c41ae530ddf7bee554, type: 3}
+    shouldExpand: 0
+  - amountToPool: 6
+    objectToPool: {fileID: 2662801209497052887, guid: ed5d3f02aca257a4dbb3924256f30f43, type: 3}
+    shouldExpand: 0
+  fruitPoints: 0a0000000f00000014000000

@@ -13,11 +13,20 @@ TagManager:
   - TopEdge
   - RightEdge
   - LeftEdge
+  - Fruit1
+  - Fruit2
+  - Fruit3
+  - CoinCanvas
+  - LifeCanvas
+  - ComboCanvas
+  - HalfApple
+  - Fruit4
+  - Fruit5
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Under_UI
   - Water
   - UI
   - 

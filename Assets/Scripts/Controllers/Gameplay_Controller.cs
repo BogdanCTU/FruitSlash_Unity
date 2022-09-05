@@ -13,12 +13,17 @@ public class Gameplay_Controller : MonoBehaviour
     public float timeLeft;
 
     // Temp Data for Pause State
+    public bool gamePaused = true;
     public float timeTemp;
     public int scoreTemp, livesTemp;
 
     // Gameplay Spawners
     [SerializeField]
     private GameObject[] foodSpawners, skullSpawners;
+
+    // Combo System
+    public int comboCount = 0;
+    public float comboTime = 0f;
 
     #endregion Gameplay_Data
 
@@ -45,6 +50,7 @@ public class Gameplay_Controller : MonoBehaviour
         if (GameplayUI_Controller.SharedInstance.startigTime > 0) GameplayUI_Controller.SharedInstance.RunStartingTimer();
         GameplayUI_Controller.SharedInstance.UpdateUI();
         GameplayUI_Controller.SharedInstance.IsGameFinished();
+        ComboTime();
     }
 
     #region Initialisators
@@ -57,28 +63,28 @@ public class Gameplay_Controller : MonoBehaviour
                 {
                     actualScore = 0;
                     lives = 5;
-                    timeLeft = 60.0f;
+                    timeLeft = 64.0f;
                     break;
                 }
             case 1:   // Medium
                 {
                     actualScore = 0;
                     lives = 3;
-                    timeLeft = 60.0f;
+                    timeLeft = 64.0f;
                     break;
                 }
             case 2:   // Hard
                 {
                     actualScore = 0;
                     lives = 3;
-                    timeLeft = 40.0f;
+                    timeLeft = 50.0f;
                     break;
                 }
             default:   // Explicit -> medium
                 {
                     actualScore = 0;
                     lives = 3;
-                    timeLeft = 60.0f;
+                    timeLeft = 64.0f;
                     break;
                 }
         }
@@ -88,16 +94,6 @@ public class Gameplay_Controller : MonoBehaviour
     {
         switch (gameMode)
         {
-            default:   // Explicit -> Medium
-                {
-                    foodSpawners[0].SetActive(true);
-                    foodSpawners[1].SetActive(true);
-                    foodSpawners[2].SetActive(true);
-                    foodSpawners[3].SetActive(false);
-                    skullSpawners[0].SetActive(true);
-                    skullSpawners[1].SetActive(false);
-                    break;
-                }
             case 0:   // Easy
                 {
                     foodSpawners[0].SetActive(true);
@@ -108,7 +104,7 @@ public class Gameplay_Controller : MonoBehaviour
                     skullSpawners[1].SetActive(false);
                     break;
                 }
-            case 2:   // Medium
+            case 1:   // Medium
                 {
                     foodSpawners[0].SetActive(true);
                     foodSpawners[1].SetActive(true);
@@ -118,7 +114,7 @@ public class Gameplay_Controller : MonoBehaviour
                     skullSpawners[1].SetActive(false);
                     break;
                 }
-            case 3:   // Hard
+            case 2:   // Hard
                 {
                     foodSpawners[0].SetActive(true);
                     foodSpawners[1].SetActive(true);
@@ -126,6 +122,16 @@ public class Gameplay_Controller : MonoBehaviour
                     foodSpawners[3].SetActive(true);
                     skullSpawners[0].SetActive(true);
                     skullSpawners[1].SetActive(true);
+                    break;
+                }
+            default:   // Explicit -> Medium
+                {
+                    foodSpawners[0].SetActive(true);
+                    foodSpawners[1].SetActive(true);
+                    foodSpawners[2].SetActive(true);
+                    foodSpawners[3].SetActive(false);
+                    skullSpawners[0].SetActive(true);
+                    skullSpawners[1].SetActive(false);
                     break;
                 }
         }
@@ -211,11 +217,13 @@ public class Gameplay_Controller : MonoBehaviour
         skullSpawners[0].SetActive(false);
         skullSpawners[1].SetActive(false);
 
+        gamePaused = true;
         SaveTempData();   // Saving Temp Game Data
     }
 
     public void ResumeGame()   // Reloading precedent Game Data
     {
+        gamePaused = false;
         InitialiseGameMode();
         timeLeft = timeTemp;
         lives = livesTemp;
@@ -223,6 +231,7 @@ public class Gameplay_Controller : MonoBehaviour
 
     public void ResumeGameExtra()   // Reloading precedent Game Data
     {
+        gamePaused = false;
         InitialiseGameMode();
         timeLeft = timeTemp;
         lives = 1;
@@ -246,6 +255,21 @@ public class Gameplay_Controller : MonoBehaviour
 
     #endregion Pausing Game
 
+    #region Getters/Setters
+    
+    public int GetGameMode()
+    {
+        return gameMode;
+    }
+
+    #endregion Getters/Setters
+
+    private void ComboTime()
+    {
+        comboTime = comboTime > 0 ? comboTime - (Time.deltaTime / 2) : (comboTime < 0 ? 0 : comboTime);
+        if (comboTime == 0) comboCount = 0;
+    }
+
     #endregion Methods
 }
-   // EOF - End Of File
+// EOF - End Of File

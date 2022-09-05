@@ -44,6 +44,7 @@ public class Enemy : MonoBehaviour
                     Gameplay_Controller.SharedInstance.GetGameModeEnemy();   // Subtracting lives or time according to game difficulty
                     this.gameObject.SetActive(false);   // Deactivate gameObject
                     Particle_Spawner.SharedInstance.SpawnParticleEffect(this.gameObject);
+                    UI_WorldCanvas_Spawner.SharedInstance.SpawnLifeObject(gameObject.transform.position);
                     break;
                 }
             case "LeftEdge":
@@ -89,7 +90,7 @@ public class Enemy : MonoBehaviour
         else if (this.gameObject.transform.position.x > 0.0f) objectRigidbody.AddForce(Vector3.left * horizontalForce, ForceMode.Impulse);
 
         // Rotating game object on random values
-        objectRigidbody.AddTorque(Random.Range(-25, 25), Random.Range(-25, 25), Random.Range(-25, 25));
+        objectRigidbody.AddTorque(Random.Range(-10, 10), Random.Range(-10, 10), Random.Range(-10, 10));
     }
 
     public void DeactivateFood()
